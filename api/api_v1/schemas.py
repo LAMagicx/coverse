@@ -17,3 +17,6 @@ class Page(BaseModel):
     id: str
     title: str
     text: str
+
+class Upload(BaseModel):
+    pages: List[CreatePage]
