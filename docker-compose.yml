@@ -1,0 +1,51 @@
+services:
+  surrealdb:
+    image: surrealdb/surrealdb:latest
+    container_name: coverse-db
+    ports:
+      - "8000:8000"
+        # volumes:
+        #   - ./mydata:/mydata
+    command: 
+      - start
+      - --log=trace
+      - --user=root
+      - --pass=root
+    restart: always
+      # healthcheck:
+      #   test: surreal isready --conn http://surrealdb:8000 || exit 1
+      #   interval: 60s
+      #   timeout: 5s
+      #   retries: 2
+    environment:
+        PYTHONDONTWRITEBYTECODE: 1
+
+  fastapi:
+    container_name: coverse-api
+    env_file:
+        - .env
+    build: ./api
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./api/:/code 
+    working_dir: /code
+    depends_on:
+      - surrealdb
+    restart: always
+      # healthcheck:
+      #   test: curl --fail http://fastapi:8080/health || exit 1
+      #   interval: 60s
+      #   timeout: 10s
+      #   retries: 3
+      #   start_period: 10s
+
+  caddy:
+    image: caddy
+    container_name: coverse-caddy
+    command: caddy reverse-proxy --from :80 --to fastapi:8080
+    ports:
+      - "80:80"
+    restart: always
+    depends_on:
+      - fastapi

@@ -1,0 +1,8 @@
+uvicorn
+fastapi
+surrealdb
+httpx
+pydantic
+pyjwt
+passlib
+bcrypt
