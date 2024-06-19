@@ -5,7 +5,7 @@ from typing import List
 class Command(BaseModel):
     name: str
     text: str
-    page: str
+    page: int
 
 class CreatePage(BaseModel):
     id: int
