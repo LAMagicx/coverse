@@ -1,8 +1,8 @@
 # api_v1/schemas.py
 from pydantic import BaseModel
-from typing import List
+from typing import List, Optional
 
-class Command(BaseModel):
+class CreateCommand(BaseModel):
     name: str
     text: str
     page: int
@@ -11,12 +11,15 @@ class CreatePage(BaseModel):
     id: int
     title: str
     text: str
-    commands: List[Command]
+    commands: List[CreateCommand]
+
+class Commands(BaseModel):
+    name: List[str]
+    text: List[str]
+    page: List[str]
 
 class Page(BaseModel):
     id: str
     title: str
     text: str
-
-class Upload(BaseModel):
-    pages: List[CreatePage]
+    commands: Commands

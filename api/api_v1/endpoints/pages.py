@@ -5,14 +5,14 @@ from pydantic import ValidationError, TypeAdapter
 from typing import List
 import json
 
-from api_v1.schemas import CreatePage, Page, Upload
+from api_v1.schemas import CreatePage, Page
 Pages = TypeAdapter(List[Page])
 
 router = APIRouter()
 
 async def fetch_page(page_id: int, request: Request) -> Page | None:
     """ selects one page given by the page_id """
-    select_query = f"SELECT id, title, text FROM page:{page_id};"
+    select_query = f"SELECT id, title, text, commands.name, commands.text, commands.page FROM page:{page_id};"
     try:
         conn = await request.app.db.get_connection()
         response = await conn.post('/sql', data=select_query) 
@@ -28,10 +28,11 @@ async def fetch_page(page_id: int, request: Request) -> Page | None:
 
 async def fetch_pages(request: Request) -> List[Page]:
     """ fetch pages from database """
-    select_query = "SELECT id, title, text FROM page;"
+    select_query = "SELECT id, title, text, commands.name, commands.text, commands.page FROM page;"
     try:
         conn = await request.app.db.get_connection()
         response = await conn.post('/sql', data=select_query)
+        print(response.content)
         data = Pages.validate_python(json.loads(response.content)[0]['result'])
         return data
     except ValidationError as e:
