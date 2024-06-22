@@ -1,2 +1,4 @@
 pytermgui
 requests
+rich
+typer
