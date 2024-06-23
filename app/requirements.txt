@@ -2,3 +2,4 @@ pytermgui
 requests
 rich
 typer
+async-typer
