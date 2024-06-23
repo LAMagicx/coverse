@@ -4,7 +4,7 @@ from fastapi import APIRouter, Request, Depends, HTTPException, status
 from fastapi.responses import JSONResponse
 import json
 
-from .endpoints import pages, auth
+from .endpoints import pages, auth, commands
 from .auth import AuthHandler
 
 auth_handler = AuthHandler()
@@ -12,11 +12,11 @@ auth_handler = AuthHandler()
 router = APIRouter()
 router.include_router(auth.router, prefix="/auth", tags=["Auth"])
 router.include_router(pages.router, prefix="/pages", dependencies=[Depends(auth_handler.auth_wrapper)], tags=["Pages"])
+router.include_router(commands.router, prefix="/commands", dependencies=[Depends(auth_handler.auth_wrapper)], tags=["Commands"])
 
 @router.get('/sql')
 async def get_query(query: str, request: Request) -> dict:
     """ GET /pages/sql?query='SELECT' - fetches custom query """
-    print(query)
     try:
         conn = await request.app.db.get_connection()
         response = await conn.post('/sql', data=query) 

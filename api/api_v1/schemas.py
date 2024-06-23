@@ -11,7 +11,8 @@ class CreatePage(BaseModel):
     id: int
     title: str
     text: str
-    commands: List[CreateCommand]
+    limit: int
+    commands: List[Optional[CreateCommand]]
 
 class Commands(BaseModel):
     name: List[str]

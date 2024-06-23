@@ -32,7 +32,6 @@ async def fetch_pages(request: Request) -> List[Page]:
     try:
         conn = await request.app.db.get_connection()
         response = await conn.post('/sql', data=select_query)
-        print(response.content)
         data = Pages.validate_python(json.loads(response.content)[0]['result'])
         return data
     except ValidationError as e:
@@ -44,7 +43,7 @@ async def fetch_pages(request: Request) -> List[Page]:
 def create_insert_page_sql(page: CreatePage) -> str:
     """ creates the surrealdb sql to create the page and it's commands """
     command_ids = [f"page_{page.id}_" + c.name.replace(' ', '_').lower() for c in page.commands]
-    page_create = f"""CREATE ONLY page:{page.id} SET title="{page.title}", text="{page.text}", commands=[{','.join([f"'command:{c_id}'" for c_id in command_ids])}];\n"""
+    page_create = f"""CREATE ONLY page:{page.id} SET title="{page.title}", text="{page.text}", limit="{page.limit}", commands=[{','.join([f"'command:{c_id}'" for c_id in command_ids])}];\n"""
     for c_id, c in zip(command_ids, page.commands):
         command_create = f"""CREATE ONLY 'command:{c_id}' SET name="{c.name}", text="{c.text}", page=page:{c.page};\n"""
         page_create += command_create
