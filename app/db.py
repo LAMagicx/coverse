@@ -1,12 +1,10 @@
 from typing import Literal
 import requests
 import time
+import os
 
 from schema import Page, CreatePage
 
-API_URL = "http://localhost/api"
-USERNAME = 'magic'
-PASSWORD = 'heard-linux-rain'
 
 class LoginError(Exception):
     def __init__(self, status_code):
@@ -14,6 +12,7 @@ class LoginError(Exception):
         super().__init__(f"Login failed with status code: {status_code}")
 
 def fetch_access_token(username: str, password: str) -> str:
+    API_URL = os.environ.get("COVERSE_API_URL")
     LOGIN_URL = API_URL + "/v1/auth/login"
     response = requests.post(LOGIN_URL,
                              headers={"Accept": "application/json", "Content-Type": "application/json"},
@@ -25,6 +24,8 @@ def fetch_access_token(username: str, password: str) -> str:
 
 def create_authenticated_session() -> requests.Session:
     global session 
+    USERNAME = os.environ.get("COVERSE_USERNAME")
+    PASSWORD = os.environ.get("COVERSE_PASSWORD")
     token = fetch_access_token(USERNAME, PASSWORD)
     session = requests.Session()
     session.headers.update({"Authorization": f"Bearer {token}",
@@ -33,6 +34,7 @@ def create_authenticated_session() -> requests.Session:
     return session
 
 def make_request(method: Literal["GET", "POST"], endpoint: str, data: dict={}, params: dict={}) -> dict:
+    API_URL = os.environ.get("COVERSE_API_URL")
     if method == "GET":
         response = session.get(API_URL + endpoint, data=data, params=params)
     elif method == "POST":
