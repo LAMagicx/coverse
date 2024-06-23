@@ -1,214 +1,232 @@
-{
-    "pages": [
-        {
-            "id": 0,
-            "title": "The Restaurant",
-            "text": "You are seated at a cozy table in a bustling restaurant, waiting for your date. The atmosphere is vibrant with the clinking of glasses and cheerful chatter.",
-            "commands": [
-                {
-                    "name": "Look around",
-                    "text": "Survey the restaurant",
-                    "page": "1"
-                },
-                {
-                    "name": "Check your phone",
-                    "text": "Look at your phone",
-                    "page": "2"
-                },
-                {
-                    "name": "Order a drink",
-                    "text": "Flag down the waiter",
-                    "page": "3"
-                }
-            ]
-        },
-        {
-            "id": 1,
-            "title": "The Survey",
-            "text": "You glance around the restaurant, taking in the sights. The decor is charming, with warm lighting and elegant furnishings.",
-            "commands": [
-                {
-                    "name": "Spot a friend",
-                    "text": "Notice a familiar face",
-                    "page": "4"
-                },
-                {
-                    "name": "Return to table",
-                    "text": "Go back to your table",
-                    "page": "0"
-                }
-            ]
-        },
-        {
-            "id": 2,
-            "title": "The Phone",
-            "text": "You check your phone, seeing a message from your date saying they'll be a few minutes late.",
-            "commands": [
-                {
-                    "name": "Reply to message",
-                    "text": "Send a reply",
-                    "page": "5"
-                },
-                {
-                    "name": "Put phone away",
-                    "text": "Put your phone back",
-                    "page": "0"
-                }
-            ]
-        },
-        {
-            "id": 3,
-            "title": "The Drink",
-            "text": "You flag down the waiter and order a refreshing drink to pass the time.",
-            "commands": [
-                {
-                    "name": "Sip drink",
-                    "text": "Take a sip",
-                    "page": "6"
-                },
-                {
-                    "name": "Strike up a conversation",
-                    "text": "Talk to the waiter",
-                    "page": "7"
-                }
-            ]
-        },
-        {
-            "id": 4,
-            "title": "The Friend",
-            "text": "You see a friend from work dining at a nearby table. They wave and smile at you.",
-            "commands": [
-                {
-                    "name": "Go over",
-                    "text": "Go to their table",
-                    "page": "8"
-                },
-                {
-                    "name": "Wave back",
-                    "text": "Wave back and stay seated",
-                    "page": "0"
-                }
-            ]
-        },
-        {
-            "id": 5,
-            "title": "The Reply",
-            "text": "You type out a quick reply and hit send. Your date responds with a smiley face emoji.",
-            "commands": [
-                {
-                    "name": "Feel relieved",
-                    "text": "Relax and wait",
-                    "page": "0"
-                },
-                {
-                    "name": "Order a drink",
-                    "text": "Flag down the waiter",
-                    "page": "3"
-                }
-            ]
-        },
-        {
-            "id": 6,
-            "title": "The Sip",
-            "text": "The drink is cool and refreshing, exactly what you needed.",
-            "commands": [
-                {
-                    "name": "Enjoy ambiance",
-                    "text": "Relax and enjoy the ambiance",
-                    "page": "1"
-                },
-                {
-                    "name": "Check phone",
-                    "text": "Look at your phone",
-                    "page": "2"
-                }
-            ]
-        },
-        {
-            "id": 7,
-            "title": "The Conversation",
-            "text": "The waiter is friendly and engaging. You chat about the best dishes on the menu.",
-            "commands": [
-                {
-                    "name": "Ask for recommendation",
-                    "text": "Get a recommendation",
-                    "page": "9"
-                },
-                {
-                    "name": "Thank the waiter",
-                    "text": "Thank the waiter and wait",
-                    "page": "0"
-                }
-            ]
-        },
-        {
-            "id": 8,
-            "title": "The Visit",
-            "text": "You walk over to your friend's table and exchange pleasantries. It's nice to see a familiar face.",
-            "commands": [
-                {
-                    "name": "Chat briefly",
-                    "text": "Have a quick chat",
-                    "page": "10"
-                },
-                {
-                    "name": "Return to table",
-                    "text": "Go back to your table",
-                    "page": "0"
-                }
-            ]
-        },
-        {
-            "id": 9,
-            "title": "The Recommendation",
-            "text": "The waiter recommends the house special, a delectable dish that sounds too good to pass up.",
-            "commands": [
-                {
-                    "name": "Order special",
-                    "text": "Order the house special",
-                    "page": "6"
-                },
-                {
-                    "name": "Thank the waiter",
-                    "text": "Thank the waiter",
-                    "page": "0"
-                }
-            ]
-        },
-        {
-            "id": 10,
-            "title": "The Chat",
-            "text": "You have a pleasant chat with your friend, catching up on the latest news.",
-            "commands": [
-                {
-                    "name": "Say goodbye",
-                    "text": "Return to your table",
-                    "page": "0"
-                },
-                {
-                    "name": "Invite them to join",
-                    "text": "Invite your friend to join you",
-                    "page": "11"
-                }
-            ]
-        },
-        {
-            "id": 11,
-            "title": "The Invitation",
-            "text": "Your friend happily joins you at your table. You now have company while waiting for your date.",
-            "commands": [
-                {
-                    "name": "Chat with friend",
-                    "text": "Continue chatting",
-                    "page": "12"
-                },
-                {
-                    "name": "Order a drink",
-                    "text": "Order drinks for both",
-                    "page": "3"
-                }
-            ]
-        }
-    ]
-}
+[
+    {
+        "id": 0,
+        "title": "The Restaurant",
+        "text": "You are seated at a cozy table in a bustling restaurant, waiting for your date. The atmosphere is vibrant with the clinking of glasses and cheerful chatter.",
+        "limit": 9,
+        "commands": [
+            {
+                "name": "Look around",
+                "text": "Survey the restaurant",
+                "page": "1"
+            },
+            {
+                "name": "Check your phone",
+                "text": "Look at your phone",
+                "page": "2"
+            },
+            {
+                "name": "Order a drink",
+                "text": "Flag down the waiter",
+                "page": "3"
+            }
+        ]
+    },
+    {
+        "id": 1,
+        "title": "The Survey",
+        "text": "You glance around the restaurant, taking in the sights. The decor is charming, with warm lighting and elegant furnishings.",
+        "limit": 9,
+        "commands": [
+            {
+                "name": "Spot a friend",
+                "text": "Notice a familiar face",
+                "page": "4"
+            },
+            {
+                "name": "Return to table",
+                "text": "Go back to your table",
+                "page": "0"
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "title": "The Phone",
+        "text": "You check your phone, seeing a message from your date saying they'll be a few minutes late.",
+        "limit": 9,
+        "commands": [
+            {
+                "name": "Reply to message",
+                "text": "Send a reply",
+                "page": "5"
+            },
+            {
+                "name": "Put phone away",
+                "text": "Put your phone back",
+                "page": "0"
+            }
+        ]
+    },
+    {
+        "id": 3,
+        "title": "The Drink",
+        "text": "You flag down the waiter and order a refreshing drink to pass the time.",
+        "limit": 9,
+        "commands": [
+            {
+                "name": "Sip drink",
+                "text": "Take a sip",
+                "page": "6"
+            },
+            {
+                "name": "Strike up a conversation",
+                "text": "Talk to the waiter",
+                "page": "7"
+            }
+        ]
+    },
+    {
+        "id": 4,
+        "title": "The Friend",
+        "text": "You see a friend from work dining at a nearby table. They wave and smile at you.",
+        "limit": 9,
+        "commands": [
+            {
+                "name": "Go over",
+                "text": "Go to their table",
+                "page": "8"
+            },
+            {
+                "name": "Wave back",
+                "text": "Wave back and stay seated",
+                "page": "0"
+            }
+        ]
+    },
+    {
+        "id": 5,
+        "title": "The Reply",
+        "text": "You type out a quick reply and hit send. Your date responds with a smiley face emoji.",
+        "limit": 9,
+        "commands": [
+            {
+                "name": "Feel relieved",
+                "text": "Relax and wait",
+                "page": "0"
+            },
+            {
+                "name": "Order a drink",
+                "text": "Flag down the waiter",
+                "page": "3"
+            }
+        ]
+    },
+    {
+        "id": 6,
+        "title": "The Sip",
+        "text": "The drink is cool and refreshing, exactly what you needed.",
+        "limit": 9,
+        "commands": [
+            {
+                "name": "Enjoy ambiance",
+                "text": "Relax and enjoy the ambiance",
+                "page": "1"
+            },
+            {
+                "name": "Check phone",
+                "text": "Look at your phone",
+                "page": "2"
+            }
+        ]
+    },
+    {
+        "id": 7,
+        "title": "The Conversation",
+        "text": "The waiter is friendly and engaging. You chat about the best dishes on the menu.",
+        "limit": 9,
+        "commands": [
+            {
+                "name": "Ask for recommendation",
+                "text": "Get a recommendation",
+                "page": "9"
+            },
+            {
+                "name": "Thank the waiter",
+                "text": "Thank the waiter and wait",
+                "page": "0"
+            }
+        ]
+    },
+    {
+        "id": 8,
+        "title": "The Visit",
+        "text": "You walk over to your friend's table and exchange pleasantries. It's nice to see a familiar face.",
+        "limit": 9,
+        "commands": [
+            {
+                "name": "Chat briefly",
+                "text": "Have a quick chat",
+                "page": "10"
+            },
+            {
+                "name": "Return to table",
+                "text": "Go back to your table",
+                "page": "0"
+            }
+        ]
+    },
+    {
+        "id": 9,
+        "title": "The Recommendation",
+        "text": "The waiter recommends the house special, a delectable dish that sounds too good to pass up.",
+        "limit": 9,
+        "commands": [
+            {
+                "name": "Order special",
+                "text": "Order the house special",
+                "page": "6"
+            },
+            {
+                "name": "Thank the waiter",
+                "text": "Thank the waiter",
+                "page": "0"
+            }
+        ]
+    },
+    {
+        "id": 10,
+        "title": "The Chat",
+        "text": "You have a pleasant chat with your friend, catching up on the latest news.",
+        "limit": 9,
+        "commands": [
+            {
+                "name": "Say goodbye",
+                "text": "Return to your table",
+                "page": "0"
+            },
+            {
+                "name": "Invite them to join",
+                "text": "Invite your friend to join you",
+                "page": "11"
+            }
+        ]
+    },
+    {
+        "id": 11,
+        "title": "The Invitation",
+        "text": "Your friend happily joins you at your table. You now have company while waiting for your date.",
+        "limit": 9,
+        "commands": [
+            {
+                "name": "Chat with friend",
+                "text": "Continue chatting",
+                "page": "12"
+            },
+            {
+                "name": "Order a drink",
+                "text": "Order drinks for both",
+                "page": "3"
+            }
+        ]
+    },
+    {
+      "id": 20,
+      "title": "tests",
+      "text": "testing feature",
+      "limit": 0,
+      "commands": [
+      ]
+    }
+]
 
