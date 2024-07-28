@@ -1,14 +1,13 @@
 # api_v1/endpoints/auth.py
 import os
-from fastapi import APIRouter, Request, status, HTTPException
-from pydantic import BaseModel
+from fastapi import APIRouter, Request, status
+
+from v1.common.exceptions import BadRequestException
+from v1.common.schemas import AuthDetails
 
 USERNAME = os.environ.get('USERNAME', '')
 HASHED_PASSWORD = os.environ.get('HASHED_PASS')
 
-class AuthDetails(BaseModel):
-    username: str
-    password: str
 
 router = APIRouter()
 
@@ -19,4 +18,4 @@ def login(request: Request, auth_details: AuthDetails):
         token = request.app.auth.encode_token(USERNAME)
         return { 'token': token }
     else:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Invalid username and/or password')
+        raise BadRequestException(status_code=status.HTTP_401_UNAUTHORIZED, exception='Invalid username and/or password')

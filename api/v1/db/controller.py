@@ -1,10 +1,10 @@
 # db.py
 import httpx
-from contextlib import asynccontextmanager
+import json
 
-from settings import DB_HOST, DB_PORT, DB_USER, DB_PASS, DB_NS, DB_DB
+from v1.common.settings import DB_HOST, DB_PORT, DB_USER, DB_PASS, DB_NS, DB_DB
 
-class Database:
+class DatabaseController:
 
     def __init__(self):
         self.host = DB_HOST
@@ -33,4 +33,12 @@ class Database:
             await self._connection_pool[client_id].aclose()
             del self._connection_pool[client_id]
 
-
+    async def sql(self, query: str = "") -> dict:
+        conn = await self.get_connection()
+        res = await conn.post('/sql', data=query)
+        res_json = json.loads(res.content)
+        for response in res_json:
+            if response['status'] == 'OK':
+                yield response['result']
+        else:
+            yield []
