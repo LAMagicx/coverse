@@ -1,232 +1,974 @@
 [
-    {
-        "id": 0,
-        "title": "The Restaurant",
-        "text": "You are seated at a cozy table in a bustling restaurant, waiting for your date. The atmosphere is vibrant with the clinking of glasses and cheerful chatter.",
-        "limit": 9,
-        "commands": [
-            {
-                "name": "Look around",
-                "text": "Survey the restaurant",
-                "page": "1"
-            },
-            {
-                "name": "Check your phone",
-                "text": "Look at your phone",
-                "page": "2"
-            },
-            {
-                "name": "Order a drink",
-                "text": "Flag down the waiter",
-                "page": "3"
-            }
-        ]
-    },
-    {
-        "id": 1,
-        "title": "The Survey",
-        "text": "You glance around the restaurant, taking in the sights. The decor is charming, with warm lighting and elegant furnishings.",
-        "limit": 9,
-        "commands": [
-            {
-                "name": "Spot a friend",
-                "text": "Notice a familiar face",
-                "page": "4"
-            },
-            {
-                "name": "Return to table",
-                "text": "Go back to your table",
-                "page": "0"
-            }
-        ]
-    },
-    {
-        "id": 2,
-        "title": "The Phone",
-        "text": "You check your phone, seeing a message from your date saying they'll be a few minutes late.",
-        "limit": 9,
-        "commands": [
-            {
-                "name": "Reply to message",
-                "text": "Send a reply",
-                "page": "5"
-            },
-            {
-                "name": "Put phone away",
-                "text": "Put your phone back",
-                "page": "0"
-            }
-        ]
-    },
-    {
-        "id": 3,
-        "title": "The Drink",
-        "text": "You flag down the waiter and order a refreshing drink to pass the time.",
-        "limit": 9,
-        "commands": [
-            {
-                "name": "Sip drink",
-                "text": "Take a sip",
-                "page": "6"
-            },
-            {
-                "name": "Strike up a conversation",
-                "text": "Talk to the waiter",
-                "page": "7"
-            }
-        ]
-    },
-    {
-        "id": 4,
-        "title": "The Friend",
-        "text": "You see a friend from work dining at a nearby table. They wave and smile at you.",
-        "limit": 9,
-        "commands": [
-            {
-                "name": "Go over",
-                "text": "Go to their table",
-                "page": "8"
-            },
-            {
-                "name": "Wave back",
-                "text": "Wave back and stay seated",
-                "page": "0"
-            }
-        ]
-    },
-    {
-        "id": 5,
-        "title": "The Reply",
-        "text": "You type out a quick reply and hit send. Your date responds with a smiley face emoji.",
-        "limit": 9,
-        "commands": [
-            {
-                "name": "Feel relieved",
-                "text": "Relax and wait",
-                "page": "0"
-            },
-            {
-                "name": "Order a drink",
-                "text": "Flag down the waiter",
-                "page": "3"
-            }
-        ]
-    },
-    {
-        "id": 6,
-        "title": "The Sip",
-        "text": "The drink is cool and refreshing, exactly what you needed.",
-        "limit": 9,
-        "commands": [
-            {
-                "name": "Enjoy ambiance",
-                "text": "Relax and enjoy the ambiance",
-                "page": "1"
-            },
-            {
-                "name": "Check phone",
-                "text": "Look at your phone",
-                "page": "2"
-            }
-        ]
-    },
-    {
-        "id": 7,
-        "title": "The Conversation",
-        "text": "The waiter is friendly and engaging. You chat about the best dishes on the menu.",
-        "limit": 9,
-        "commands": [
-            {
-                "name": "Ask for recommendation",
-                "text": "Get a recommendation",
-                "page": "9"
-            },
-            {
-                "name": "Thank the waiter",
-                "text": "Thank the waiter and wait",
-                "page": "0"
-            }
-        ]
-    },
-    {
-        "id": 8,
-        "title": "The Visit",
-        "text": "You walk over to your friend's table and exchange pleasantries. It's nice to see a familiar face.",
-        "limit": 9,
-        "commands": [
-            {
-                "name": "Chat briefly",
-                "text": "Have a quick chat",
-                "page": "10"
-            },
-            {
-                "name": "Return to table",
-                "text": "Go back to your table",
-                "page": "0"
-            }
-        ]
-    },
-    {
-        "id": 9,
-        "title": "The Recommendation",
-        "text": "The waiter recommends the house special, a delectable dish that sounds too good to pass up.",
-        "limit": 9,
-        "commands": [
-            {
-                "name": "Order special",
-                "text": "Order the house special",
-                "page": "6"
-            },
-            {
-                "name": "Thank the waiter",
-                "text": "Thank the waiter",
-                "page": "0"
-            }
-        ]
-    },
-    {
-        "id": 10,
-        "title": "The Chat",
-        "text": "You have a pleasant chat with your friend, catching up on the latest news.",
-        "limit": 9,
-        "commands": [
-            {
-                "name": "Say goodbye",
-                "text": "Return to your table",
-                "page": "0"
-            },
-            {
-                "name": "Invite them to join",
-                "text": "Invite your friend to join you",
-                "page": "11"
-            }
-        ]
-    },
-    {
-        "id": 11,
-        "title": "The Invitation",
-        "text": "Your friend happily joins you at your table. You now have company while waiting for your date.",
-        "limit": 9,
-        "commands": [
-            {
-                "name": "Chat with friend",
-                "text": "Continue chatting",
-                "page": "12"
-            },
-            {
-                "name": "Order a drink",
-                "text": "Order drinks for both",
-                "page": "3"
-            }
-        ]
-    },
-    {
-      "id": 20,
-      "title": "tests",
-      "text": "testing feature",
-      "limit": 0,
-      "commands": [
-      ]
-    }
+  {
+    "id": 0,
+    "limit": 6,
+    "title": "Morning Routine",
+    "text": "You wake up in your cozy apartment, ready to start another day as a renowned food critic. The sun is shining through the window.",
+    "commands": [
+      {
+        "name": "Get out of bed",
+        "text": "Leave your bed",
+        "page": 1,
+        "required": []
+      },
+      {
+        "name": "Check phone",
+        "text": "Look at your phone",
+        "page": 2,
+        "required": []
+      },
+      {
+        "name": "Snooze alarm",
+        "text": "Hit the snooze button",
+        "page": 3,
+        "required": []
+      },
+      {
+        "name": "Check notes",
+        "text": "Review your food critique notes",
+        "page": 4,
+        "required": []
+      }
+    ]
+  },
+  {
+    "id": 1,
+    "limit": 6,
+    "title": "Bathroom",
+    "text": "You go to the bathroom and freshen up. Everything seems perfectly normal.",
+    "commands": [
+      {
+        "name": "Brush teeth",
+        "text": "Brush your teeth",
+        "page": 5,
+        "required": []
+      },
+      {
+        "name": "Take a shower",
+        "text": "Take a refreshing shower",
+        "page": 6,
+        "required": []
+      },
+      {
+        "name": "Look in mirror",
+        "text": "Inspect yourself in the mirror",
+        "page": 7,
+        "required": []
+      },
+      {
+        "name": "Return to bedroom",
+        "text": "Go back to your bedroom",
+        "page": 0,
+        "required": []
+      },
+      {
+        "name": "Notice something odd",
+        "text": "You see something strange in the mirror",
+        "page": 19,
+        "required": [25]
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "limit": 6,
+    "title": "Phone",
+    "text": "You check your phone. There's a message from a friend inviting you to lunch and an email with your latest food critique assignment.",
+    "commands": [
+      {
+        "name": "Reply to friend",
+        "text": "Accept the lunch invitation",
+        "page": 8,
+        "required": []
+      },
+      {
+        "name": "Read email",
+        "text": "Check your assignment",
+        "page": 9,
+        "required": []
+      },
+      {
+        "name": "Put phone away",
+        "text": "Return to your routine",
+        "page": 0,
+        "required": []
+      },
+      {
+        "name": "Notice glitch",
+        "text": "See a glitch in the phone screen",
+        "page": 20,
+        "required": [28]
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "limit": 6,
+    "title": "Snooze",
+    "text": "You hit the snooze button and close your eyes for a few more minutes of rest.",
+    "commands": [
+      {
+        "name": "Wake up",
+        "text": "Get out of bed",
+        "page": 1,
+        "required": []
+      },
+      {
+        "name": "Dream",
+        "text": "Have a strange dream",
+        "page": 10,
+        "required": []
+      },
+      {
+        "name": "Check time",
+        "text": "Look at the clock",
+        "page": 21,
+        "required": [26]
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "limit": 6,
+    "title": "Notes",
+    "text": "You review your notes from your last food critique. Everything seems detailed and thorough.",
+    "commands": [
+      {
+        "name": "Close notes",
+        "text": "Put the notes away",
+        "page": 0,
+        "required": []
+      },
+      {
+        "name": "Rewrite notes",
+        "text": "Make adjustments to your notes",
+        "page": 11,
+        "required": []
+      },
+      {
+        "name": "Spot inconsistency",
+        "text": "Notice something off in your notes",
+        "page": 22,
+        "required": [27]
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "limit": 6,
+    "title": "Teeth Brushing",
+    "text": "You brush your teeth. The minty freshness wakes you up a bit more.",
+    "commands": [
+      {
+        "name": "Finish up",
+        "text": "Finish brushing your teeth",
+        "page": 1,
+        "required": []
+      },
+      {
+        "name": "Brush again",
+        "text": "Brush your teeth again",
+        "page": 12,
+        "required": []
+      },
+      {
+        "name": "Check gums",
+        "text": "Inspect your gums closely",
+        "page": 23,
+        "required": [29]
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "limit": 6,
+    "title": "Shower",
+    "text": "You take a refreshing shower. The warm water helps you wake up completely.",
+    "commands": [
+      {
+        "name": "Finish shower",
+        "text": "Get out of the shower",
+        "page": 1,
+        "required": []
+      },
+      {
+        "name": "Stay longer",
+        "text": "Enjoy the shower a bit longer",
+        "page": 13,
+        "required": []
+      },
+      {
+        "name": "Notice water",
+        "text": "Feel the water change",
+        "page": 24,
+        "required": [30]
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "limit": 6,
+    "title": "Mirror",
+    "text": "You look at yourself in the mirror. Everything looks as it should.",
+    "commands": [
+      {
+        "name": "Check closer",
+        "text": "Inspect your reflection closely",
+        "page": 14,
+        "required": []
+      },
+      {
+        "name": "Make a face",
+        "text": "Make a funny face in the mirror",
+        "page": 15,
+        "required": []
+      },
+      {
+        "name": "Return to routine",
+        "text": "Go back to your routine",
+        "page": 1,
+        "required": []
+      },
+      {
+        "name": "Notice oddity",
+        "text": "See something strange in the mirror",
+        "page": 19,
+        "required": [25]
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "limit": 6,
+    "title": "Lunch Invitation",
+    "text": "You accept your friend's invitation for lunch at a nearby cafe.",
+    "commands": [
+      {
+        "name": "Get ready",
+        "text": "Prepare to go out",
+        "page": 16,
+        "required": []
+      },
+      {
+        "name": "Cancel",
+        "text": "Change your mind",
+        "page": 2,
+        "required": []
+      },
+      {
+        "name": "Text back",
+        "text": "Send another message",
+        "page": 2,
+        "required": []
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "limit": 6,
+    "title": "Assignment",
+    "text": "You read the email detailing your next food critique assignment at a high-end restaurant.",
+    "commands": [
+      {
+        "name": "Plan visit",
+        "text": "Schedule a time to visit the restaurant",
+        "page": 17,
+        "required": []
+      },
+      {
+        "name": "Check restaurant",
+        "text": "Look up the restaurant online",
+        "page": 18,
+        "required": []
+      },
+      {
+        "name": "Reply to email",
+        "text": "Respond to the assignment email",
+        "page": 2,
+        "required": []
+      },
+      {
+        "name": "Notice something",
+        "text": "See something unusual in the email",
+        "page": 25,
+        "required": [28]
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "limit": 6,
+    "title": "Dream",
+    "text": "You have a strange dream about being in a world where all food tastes the same.",
+    "commands": [
+      {
+        "name": "Wake up",
+        "text": "Wake up from the dream",
+        "page": 1,
+        "required": []
+      },
+      {
+        "name": "Stay asleep",
+        "text": "Continue dreaming",
+        "page": 3,
+        "required": []
+      },
+      {
+        "name": "Try to control dream",
+        "text": "Attempt to control the dream",
+        "page": 26,
+        "required": []
+      }
+    ]
+  },
+  {
+    "id": 11,
+    "limit": 6,
+    "title": "Rewrite Notes",
+    "text": "You make some adjustments to your food critique notes, adding more details.",
+    "commands": [
+      {
+        "name": "Finish rewriting",
+        "text": "Put the notes away",
+        "page": 4,
+        "required": []
+      },
+      {
+        "name": "Add more details",
+        "text": "Add even more details",
+        "page": 4,
+        "required": []
+      },
+      {
+        "name": "Notice inconsistency",
+        "text": "Notice something off in your notes",
+        "page": 22,
+        "required": [27]
+      }
+    ]
+  },
+  {
+    "id": 12,
+    "limit": 6,
+    "title": "Teeth Brushing Again",
+    "text": "You brush your teeth again, but the taste feels strangely bland.",
+    "commands": [
+      {
+        "name": "Finish up",
+        "text": "Finish brushing your teeth",
+        "page": 1,
+        "required": []
+      },
+      {
+        "name": "Brush again",
+        "text": "Brush your teeth again",
+        "page": 12,
+        "required": []
+      },
+      {
+        "name": "Check gums",
+        "text": "Inspect your gums closely",
+        "page": 23,
+        "required": [29]
+      }
+    ]
+  },
+  {
+    "id": 13,
+    "limit": 6,
+    "title": "Long Shower",
+    "text": "You enjoy the shower a bit longer, feeling relaxed.",
+    "commands": [
+      {
+        "name": "Finish shower",
+        "text": "Get out of the shower",
+        "page": 1,
+        "required": []
+      },
+      {
+        "name": "Stay even longer",
+        "text": "Stay in the shower even longer",
+        "page": 13,
+        "required": []
+      },
+      {
+        "name": "Notice water",
+        "text": "Feel the water change",
+        "page": 24,
+        "required": [30]
+      }
+    ]
+  },
+  {
+    "id": 14,
+    "limit": 6,
+    "title": "Close Inspection",
+    "text": "You inspect your reflection closely, but everything seems normal.",
+    "commands": [
+      {
+        "name": "Make a face",
+        "text": "Make a funny face in the mirror",
+        "page": 15,
+        "required": []
+      },
+      {
+        "name": "Return to routine",
+        "text": "Go back to your routine",
+        "page": 1,
+        "required": []
+      },
+      {
+        "name": "Notice oddity",
+        "text": "See something strange in the mirror",
+        "page": 19,
+        "required": [25]
+      }
+    ]
+  },
+  {
+    "id": 15,
+    "limit": 6,
+    "title": "Funny Face",
+    "text": "You make a funny face in the mirror, feeling a bit silly.",
+    "commands": [
+      {
+        "name": "Return to routine",
+        "text": "Go back to your routine",
+        "page": 1,
+        "required": []
+      },
+      {
+        "name": "Make another face",
+        "text": "Make another funny face",
+        "page": 15,
+        "required": []
+      },
+      {
+        "name": "Notice oddity",
+        "text": "See something strange in the mirror",
+        "page": 19,
+        "required": [25]
+      }
+    ]
+  },
+  {
+    "id": 16,
+    "limit": 6,
+    "title": "Getting Ready",
+    "text": "You prepare to go out for lunch with your friend.",
+    "commands": [
+      {
+        "name": "Leave apartment",
+        "text": "Head out the door",
+        "page": 27,
+        "required": []
+      },
+      {
+        "name": "Change clothes",
+        "text": "Pick out a different outfit",
+        "page": 28,
+        "required": []
+      },
+      {
+        "name": "Check phone",
+        "text": "Look at your phone again",
+        "page": 2,
+        "required": []
+      }
+    ]
+  },
+  {
+    "id": 17,
+    "limit": 6,
+    "title": "Planning Visit",
+    "text": "You schedule a time to visit the high-end restaurant for your food critique assignment.",
+    "commands": [
+      {
+        "name": "Confirm visit",
+        "text": "Confirm your reservation",
+        "page": 29,
+        "required": []
+      },
+      {
+        "name": "Change time",
+        "text": "Reschedule your visit",
+        "page": 17,
+        "required": []
+      },
+      {
+        "name": "Check restaurant",
+        "text": "Look up the restaurant online",
+        "page": 18,
+        "required": []
+      }
+    ]
+  },
+  {
+    "id": 18,
+    "limit": 6,
+    "title": "Restaurant Search",
+    "text": "You look up the restaurant online and read some reviews.",
+    "commands": [
+      {
+        "name": "Read reviews",
+        "text": "Check out the reviews",
+        "page": 30,
+        "required": []
+      },
+      {
+        "name": "Visit website",
+        "text": "Go to the restaurant's website",
+        "page": 31,
+        "required": []
+      },
+      {
+        "name": "Notice something",
+        "text": "See something unusual in the reviews",
+        "page": 25,
+        "required": [28]
+      }
+    ]
+  },
+  {
+    "id": 19,
+    "limit": 6,
+    "title": "Odd Reflection",
+    "text": "You notice something strange in the mirror. Your reflection doesn't quite match your movements.",
+    "commands": [
+      {
+        "name": "Investigate further",
+        "text": "Look closer at the mirror",
+        "page": 32,
+        "required": []
+      },
+      {
+        "name": "Return to routine",
+        "text": "Go back to your routine",
+        "page": 1,
+        "required": []
+      },
+      {
+        "name": "Call friend",
+        "text": "Call your friend to discuss",
+        "page": 33,
+        "required": [2, 8]
+      }
+    ]
+  },
+  {
+    "id": 20,
+    "limit": 6,
+    "title": "Glitch",
+    "text": "You notice a strange glitch on your phone screen. It flickers and shows odd patterns.",
+    "commands": [
+      {
+        "name": "Restart phone",
+        "text": "Turn your phone off and on again",
+        "page": 34,
+        "required": []
+      },
+      {
+        "name": "Ignore glitch",
+        "text": "Ignore the glitch",
+        "page": 2,
+        "required": []
+      },
+      {
+        "name": "Investigate glitch",
+        "text": "Look into the glitch further",
+        "page": 35,
+        "required": [28]
+      }
+    ]
+  },
+  {
+    "id": 21,
+    "limit": 6,
+    "title": "Clock Check",
+    "text": "You check the clock and notice the time seems to be off. It feels like time is moving strangely.",
+    "commands": [
+      {
+        "name": "Reset clock",
+        "text": "Try to reset the clock",
+        "page": 36,
+        "required": []
+      },
+      {
+        "name": "Ignore it",
+        "text": "Ignore the strange time",
+        "page": 3,
+        "required": []
+      },
+      {
+        "name": "Check other clocks",
+        "text": "Look at other clocks in the house",
+        "page": 37,
+        "required": [26]
+      }
+    ]
+  },
+  {
+    "id": 22,
+    "limit": 6,
+    "title": "Inconsistency",
+    "text": "You notice an inconsistency in your notes. The details don't match your memory.",
+    "commands": [
+      {
+        "name": "Investigate notes",
+        "text": "Look deeper into the notes",
+        "page": 38,
+        "required": []
+      },
+      {
+        "name": "Rewrite notes",
+        "text": "Rewrite the notes again",
+        "page": 11,
+        "required": []
+      },
+      {
+        "name": "Leave notes",
+        "text": "Put the notes away",
+        "page": 4,
+        "required": []
+      }
+    ]
+  },
+  {
+    "id": 23,
+    "limit": 6,
+    "title": "Gums Check",
+    "text": "You inspect your gums closely. They look fine but feel a bit numb.",
+    "commands": [
+      {
+        "name": "Rinse mouth",
+        "text": "Rinse your mouth with water",
+        "page": 5,
+        "required": []
+      },
+      {
+        "name": "Brush again",
+        "text": "Brush your teeth again",
+        "page": 12,
+        "required": []
+      },
+      {
+        "name": "Ignore it",
+        "text": "Ignore the numbness",
+        "page": 5,
+        "required": []
+      }
+    ]
+  },
+  {
+    "id": 24,
+    "limit": 6,
+    "title": "Water Change",
+    "text": "You notice the water in the shower feels different. It's not as warm as it should be.",
+    "commands": [
+      {
+        "name": "Check heater",
+        "text": "Inspect the water heater",
+        "page": 39,
+        "required": []
+      },
+      {
+        "name": "Stay in shower",
+        "text": "Stay in the shower anyway",
+        "page": 13,
+        "required": []
+      },
+      {
+        "name": "Get out",
+        "text": "Get out of the shower",
+        "page": 1,
+        "required": []
+      }
+    ]
+  },
+  {
+    "id": 25,
+    "limit": 6,
+    "title": "Unusual Email",
+    "text": "You notice something unusual in the email. It mentions a dish that you've never heard of.",
+    "commands": [
+      {
+        "name": "Research dish",
+        "text": "Look up the dish online",
+        "page": 40,
+        "required": []
+      },
+      {
+        "name": "Ignore it",
+        "text": "Ignore the strange dish",
+        "page": 9,
+        "required": []
+      },
+      {
+        "name": "Ask a friend",
+        "text": "Call a friend for advice",
+        "page": 33,
+        "required": [2, 8]
+      }
+    ]
+  },
+  {
+    "id": 26,
+    "limit": 6,
+    "title": "Dream Control",
+    "text": "You try to control your dream, realizing that you're in a strange, surreal world.",
+    "commands": [
+      {
+        "name": "Explore",
+        "text": "Explore the dream world",
+        "page": 41,
+        "required": []
+      },
+      {
+        "name": "Wake up",
+        "text": "Wake up from the dream",
+        "page": 1,
+        "required": []
+      },
+      {
+        "name": "Look for answers",
+        "text": "Search for explanations in the dream",
+        "page": 42,
+        "required": []
+      }
+    ]
+  },
+  {
+    "id": 27,
+    "limit": 6,
+    "title": "Leave Apartment",
+    "text": "You step out of your apartment, ready to meet your friend for lunch.",
+    "commands": [
+      {
+        "name": "Walk to cafe",
+        "text": "Walk to the nearby cafe",
+        "page": 43,
+        "required": []
+      },
+      {
+        "name": "Call a cab",
+        "text": "Call a taxi to the cafe",
+        "page": 44,
+        "required": []
+      },
+      {
+        "name": "Change mind",
+        "text": "Go back to your apartment",
+        "page": 16,
+        "required": []
+      }
+    ]
+  },
+  {
+    "id": 28,
+    "limit": 6,
+    "title": "Change Clothes",
+    "text": "You change into a different outfit, feeling more prepared for the day.",
+    "commands": [
+      {
+        "name": "Leave apartment",
+        "text": "Head out the door",
+        "page": 27,
+        "required": []
+      },
+      {
+        "name": "Check phone",
+        "text": "Look at your phone again",
+        "page": 2,
+        "required": []
+      },
+      {
+        "name": "Change again",
+        "text": "Pick another outfit",
+        "page": 28,
+        "required": []
+      }
+    ]
+  },
+  {
+    "id": 29,
+    "limit": 6,
+    "title": "Confirm Visit",
+    "text": "You confirm your reservation at the high-end restaurant for your food critique assignment.",
+    "commands": [
+      {
+        "name": "Prepare for visit",
+        "text": "Get ready for the visit",
+        "page": 45,
+        "required": []
+      },
+      {
+        "name": "Change time",
+        "text": "Reschedule your visit",
+        "page": 17,
+        "required": []
+      },
+      {
+        "name": "Check restaurant",
+        "text": "Look up the restaurant online",
+        "page": 18,
+        "required": []
+      }
+    ]
+  },
+  {
+    "id": 30,
+    "limit": 6,
+    "title": "Read Reviews",
+    "text": "You read reviews about the restaurant. Most of them are positive, but a few mention strange experiences.",
+    "commands": [
+      {
+        "name": "Visit website",
+        "text": "Go to the restaurant's website",
+        "page": 31,
+        "required": []
+      },
+      {
+        "name": "Notice something",
+        "text": "See something unusual in the reviews",
+        "page": 25,
+        "required": [28]
+      },
+      {
+        "name": "Plan visit",
+        "text": "Schedule a time to visit the restaurant",
+        "page": 17,
+        "required": []
+      }
+    ]
+  },
+  {
+    "id": 31,
+    "limit": 6,
+    "title": "Visit Website",
+    "text": "You visit the restaurant's website. It looks professional, but there's a hidden page that catches your eye.",
+    "commands": [
+      {
+        "name": "Explore hidden page",
+        "text": "Check out the hidden page",
+        "page": 46,
+        "required": []
+      },
+      {
+        "name": "Return to reviews",
+        "text": "Go back to reading reviews",
+        "page": 30,
+        "required": []
+      },
+      {
+        "name": "Plan visit",
+        "text": "Schedule a time to visit the restaurant",
+        "page": 17,
+        "required": []
+      }
+    ]
+  },
+  {
+    "id": 32,
+    "limit": 6,
+    "title": "Investigate Mirror",
+    "text": "You look closer at the mirror. Your reflection moves slightly out of sync with your actions.",
+    "commands": [
+      {
+        "name": "Touch mirror",
+        "text": "Reach out and touch the mirror",
+        "page": 47,
+        "required": []
+      },
+      {
+        "name": "Step back",
+        "text": "Step away from the mirror",
+        "page": 1,
+        "required": []
+      },
+      {
+        "name": "Call friend",
+        "text": "Call your friend to discuss",
+        "page": 33,
+        "required": [2, 8]
+      }
+    ]
+  },
+  {
+    "id": 33,
+    "limit": 6,
+    "title": "Call Friend",
+    "text": "You call your friend to discuss the strange things happening.",
+    "commands": [
+      {
+        "name": "Discuss oddities",
+        "text": "Talk about the odd things you've noticed",
+        "page": 48,
+        "required": []
+      },
+      {
+        "name": "Arrange meeting",
+        "text": "Plan to meet in person",
+        "page": 49,
+        "required": []
+      },
+      {
+        "name": "End call",
+        "text": "End the call and continue your routine",
+        "page": 1,
+        "required": []
+      }
+    ]
+  },
+  {
+    "id": 34,
+    "limit": 6,
+    "title": "Restart Phone",
+    "text": "You restart your phone, hoping the glitch will be resolved.",
+    "commands": [
+      {
+        "name": "Check phone",
+        "text": "Look at your phone again",
+        "page": 2,
+        "required": []
+      },
+      {
+        "name": "Ignore glitch",
+        "text": "Ignore the glitch",
+        "page": 2,
+        "required": []
+      },
+      {
+        "name": "Investigate glitch",
+        "text": "Look into the glitch further",
+        "page": 35,
+        "required": [28]
+      }
+    ]
+  },
+  {
+    "id": 35,
+    "limit": 6,
+    "title": "Investigate Glitch",
+    "text": "You look into the glitch further, noticing patterns that seem intentional.",
+    "commands": [
+      {
+        "name": "Research online",
+        "text": "Look up similar glitches online",
+        "page": 50,
+        "required": []
+      },
+      {
+        "name": "Ignore it",
+        "text": "Ignore the glitch and continue",
+        "page": 2,
+        "required": []
+      },
+      {
+        "name": "Call friend",
+        "text": "Call your friend to discuss",
+        "page": 33,
+        "required": [2, 8]
+      }
+    ]
+  }
 ]
-
