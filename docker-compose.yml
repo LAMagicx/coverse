@@ -24,16 +24,18 @@ services:
     container_name: coverse-api
     env_file:
         - .env
+    environment:
+      - WATCHFILES_FORCE_POLLING=true
     build: ./api
     ports:
       - "8080:8080"
     volumes:
-      - ./api/:/code 
-    working_dir: /code
+      - ./api/:/api
     depends_on:
       - surrealdb
     restart: always
-      # healthcheck:
+      # command: uvicorn api.main:api --host 0.0.0.0 --port 8080 --reload
+    # healthcheck:
       #   test: curl --fail http://fastapi:8080/health || exit 1
       #   interval: 60s
       #   timeout: 10s
