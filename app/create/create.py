@@ -8,10 +8,8 @@ import typer
 import json
 import readline
 
-from schema import Page, Command, Pages, CreatePage, CreateCommands
-from db import make_request
-
-
+from utils.schema import Page, Command, Pages, CreatePage, CreateCommands
+from utils.db import make_request
 
 err_console = Console(stderr=True)
 console = Console()
@@ -133,8 +131,3 @@ async def create_command(commands: Annotated[str, typer.Option(help="JSON string
 
     if Confirm.ask("Would you like to create another command ?"):
         await create_command()
-
-
-
-if __name__ == "__main__":
-    app()

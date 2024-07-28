@@ -3,7 +3,7 @@ import requests
 import time
 import os
 
-from schema import Page, CreatePage
+from utils.schema import Page, CreatePage
 
 
 class LoginError(Exception):
