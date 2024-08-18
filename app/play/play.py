@@ -33,9 +33,9 @@ def slow_print(msg: str, style: str="", delay: float=0.01):
         if msg[i] == ' ':
             space_count += 1
         if style:
-            console.print(f"[{style}]{msg[:i]}[/{style}]", end='\r')
+            console.print(f"[{style}]{msg[i]}[/{style}]", end='')
         else:
-            console.print(f"{msg[:i]}", end='\r')
+            console.print(f"{msg[i]}", end='')
         space_count = pause(delay, space_count)
     print("")
 

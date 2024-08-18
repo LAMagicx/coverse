@@ -75,8 +75,9 @@ async def create_page(pages: Annotated[str, typer.Option(help="JSON string of th
 
         title = Prompt.ask("Enter the page title ")
         text = Prompt.ask("Enter the page text ")
+        limit = max(1, min(9, int(Prompt.ask("Enter the maximum number of commands (default is 6, capped at 9) "))))
         commands = []
-        while Confirm.ask("Create Command ?"):
+        while len(commands) < limit and Confirm.ask("Create Command ?"):
             name = Prompt.ask("Command name ")
             text = Prompt.ask("Command text ")
             # print possible pages to point to.
@@ -90,7 +91,8 @@ async def create_page(pages: Annotated[str, typer.Option(help="JSON string of th
             "id": id,
             "title": title,
             "text": text,
-            "commands": commands
+            "commands": commands,
+            "limit": limit
         })
         pages = Pages.validate_python(pages)
     else:
