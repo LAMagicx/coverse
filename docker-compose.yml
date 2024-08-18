@@ -32,7 +32,7 @@ services:
     volumes:
       - ./api/:/api
     depends_on:
-      - surrealdb
+      - coverse-db
     networks:
       - server-net
     restart: always
