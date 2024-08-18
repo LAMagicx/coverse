@@ -22,6 +22,12 @@ services:
     environment:
         PYTHONDONTWRITEBYTECODE: 1
 
+  coverse-docs:
+    container_name: docs 
+    build: ./docs 
+    ports:
+      - "8081:80"
+
   coverse-api:
     container_name: api
     env_file:
