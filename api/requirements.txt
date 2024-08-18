@@ -6,3 +6,5 @@ pydantic
 pyjwt
 passlib
 bcrypt
+spacy
+fastembed

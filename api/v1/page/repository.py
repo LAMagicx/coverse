@@ -1,12 +1,25 @@
-from typing import Optional
+from typing import Optional, List
 from v1.db import DatabaseController
 from v1.common.schemas import Page, FetchPage, FetchPages
 
+# for embedding
+from fastembed import TextEmbedding
+import spacy
+import numpy as np
+
+nlp = spacy.load("en_core_web_sm", enable=["attribute_ruler", "tagger", "lemmatizer"])
+model = TextEmbedding(model_name="BAAI/bge-small-en-v1.5")
+
+def embed(sentence: str, precision: int = 3) -> List[float]:
+    """ creates a vector embedding given a senctence """
+    lemma = " ".join(token.lemma_ for token in nlp(sentence) if not token.is_stop and not token.is_punct)
+    embedding = next(model.embed([lemma]))
+    return np.round(embedding.astype(np.float64), precision).tolist()
 
 def create_insert_page_sql(page: Page) -> str:
     """ creates the surrealdb sql to create the page and it's commands """
     command_ids = [f"page_{page.id}_" + c.name.replace(' ', '_').lower() for c in page.commands]
-    page_create = f"""CREATE ONLY page:{page.id} SET title="{page.title}", text="{page.text}", limit="{page.limit}", commands=[{','.join([f"'command:{c_id}'" for c_id in command_ids])}];\n"""
+    page_create = f"""CREATE ONLY page:{page.id} SET title="{page.title}", text="{page.text}", embedding={embed(page.title + '. ' + page.text)}, limit="{page.limit}", commands=[{','.join([f"'command:{c_id}'" for c_id in command_ids])}];\n"""
     for c_id, c in zip(command_ids, page.commands):
         command_create = f"""CREATE ONLY 'command:{c_id}' SET name="{c.name}", text="{c.text}", page=page:{c.page}, required=[{','.join([f"'page:{page_id}'" for page_id in c.required])}];\n"""
         page_create += command_create
@@ -43,3 +56,33 @@ class PageRepository(DatabaseController):
         else:
             return None
 
+    async def delete_page(self, page_id: int):
+        res = await anext(self.sql(f"DELETE page:{page_id}"))
+        return res
+
+    async def search_pages(self, query: str, limit: int = 3):
+        res = await anext(self.sql(f"""
+        SELECT title, id, commands.name,
+          search::highlight('<b>', '</b>', 1) AS text,
+          search::score(0) * 2 + search::score(1) * 1 AS score FROM page
+        WHERE title @0@ '{query}' OR text @1@ '{query}'
+        ORDER BY score DESC
+        LIMIT {limit};
+        """))
+        return res
+
+    async def semantic_search_pages(self, query: str, limit: int = 3):
+        embedding = embed(query)
+        iter = self.sql(f"""
+        LET $pt = {embedding};
+        SELECT title, id, commands.name, text,
+            vector::similarity::cosine(embedding, $pt) AS score
+            FROM page WHERE embedding <|384,COSINE|> $pt
+            ORDER BY score DESC LIMIT {limit};
+        """)
+
+        _ = await anext(iter)
+        res = await anext(iter)
+        return res
+        
+        

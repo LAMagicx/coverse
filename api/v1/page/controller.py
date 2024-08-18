@@ -2,7 +2,7 @@ from fastapi import Request, APIRouter, status
 from fastapi.responses import JSONResponse
 from typing import List
 
-from v1.common.schemas import Page, FetchPage, FetchPages
+from v1.common.schemas import Page, FetchPage, FetchPages, PageQuery, PageQueries
 from .service import PageService
 
 service = PageService()
@@ -46,4 +46,32 @@ async def get_page(page_id: int, request: Request) -> FetchPage:
     return JSONResponse(
         status_code=status.HTTP_200_OK,
         content=page.dict()
+    )
+
+@router.delete('/{page_id}')
+async def delete_page(page_id: int, request: Request) -> dict:
+    """ DELETE /pages/{page_id} - delete a page from id 
+    should be only run by admin """ 
+    page = await service.delete_page(page_id=page_id)
+    return JSONResponse(
+        status_code=status.HTTP_202_ACCEPTED,
+        content=page.dict()
+    )
+
+@router.get('/search-text/{query}')
+async def search_pages(query: str, request: Request) -> List[PageQuery]:
+    """ GET /pages/search/{query} - queries pages and returns close pages """
+    pages = await service.search_pages(query)
+    return JSONResponse(
+        status_code=status.HTTP_200_OK,
+        content=[page for page in pages]
+    )
+
+@router.get('/search-semantic/{query}')
+async def search_pages(query: str, request: Request) -> List[PageQuery]:
+    """ GET /pages/search/{query} - queries pages and returns close pages """
+    pages = await service.semantic_search_pages(query)
+    return JSONResponse(
+        status_code=status.HTTP_200_OK,
+        content=[page for page in pages]
     )

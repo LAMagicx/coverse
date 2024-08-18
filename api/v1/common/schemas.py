@@ -34,3 +34,12 @@ class FetchPage(BaseModel):
     commands: FetchCommands
 
 FetchPages = TypeAdapter(List[FetchPage])
+
+class PageQuery(BaseModel):
+    id: str
+    title: str
+    text: str
+    score: float
+    commands: dict
+
+PageQueries = TypeAdapter(List[PageQuery])

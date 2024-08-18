@@ -2,7 +2,7 @@ from typing import List
 from fastapi import status
 
 from v1.common.exceptions import BadRequestException
-from v1.common.schemas import FetchPage, FetchPages, Page
+from v1.common.schemas import FetchPage, FetchPages, Page, PageQueries
 from .repository import PageRepository
 
 class PageService:
@@ -57,5 +57,36 @@ class PageService:
         try:
             for page in pages:
                 yield await self.create_page(page)
+        except Exception as e:
+            raise BadRequestException(str(e), status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    async def delete_page(self, page_id: int):
+        try:
+            page = await self.repository.fetch_page(page_id)
+            if page is None:
+                raise BadRequestException("Page not found")
+            else:
+                res = await self.repository.delete_page(page_id)
+            return page
+        except Exception as e:
+            raise BadRequestException(str(e), status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    async def search_pages(self, query: str) -> PageQueries:
+        try:
+            pages = await self.repository.search_pages(query)
+            if pages is None or pages == []:
+                raise BadRequestException("No pages found")
+            else:
+                return pages
+        except Exception as e:
+            raise BadRequestException(str(e), status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    async def semantic_search_pages(self, query: str) -> PageQueries:
+        try:
+            pages = await self.repository.semantic_search_pages(query)
+            if pages is None or pages == []:
+                raise BadRequestException("No pages found")
+            else:
+                return pages
         except Exception as e:
             raise BadRequestException(str(e), status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
