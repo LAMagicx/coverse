@@ -1,5 +1,6 @@
 services:
   coverse-db:
+    container_name: coverse-db
     image: surrealdb/surrealdb:latest
     ports:
       - "8000:8000"
@@ -22,6 +23,7 @@ services:
         PYTHONDONTWRITEBYTECODE: 1
 
   coverse-api:
+    container_name: api
     env_file:
         - .env
     environment:
