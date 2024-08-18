@@ -1,7 +1,6 @@
 services:
-  surrealdb:
+  coverse-db:
     image: surrealdb/surrealdb:latest
-    container_name: coverse-db
     ports:
       - "8000:8000"
         # volumes:
@@ -11,6 +10,8 @@ services:
       - --log=trace
       - --user=root
       - --pass=root
+    networks:
+      - server-net
     restart: always
       # healthcheck:
       #   test: surreal isready --conn http://surrealdb:8000 || exit 1
@@ -20,8 +21,7 @@ services:
     environment:
         PYTHONDONTWRITEBYTECODE: 1
 
-  fastapi:
-    container_name: coverse-api
+  coverse-api:
     env_file:
         - .env
     environment:
@@ -33,6 +33,8 @@ services:
       - ./api/:/api
     depends_on:
       - surrealdb
+    networks:
+      - server-net
     restart: always
       # command: uvicorn api.main:api --host 0.0.0.0 --port 8080 --reload
     # healthcheck:
@@ -42,12 +44,19 @@ services:
       #   retries: 3
       #   start_period: 10s
 
-  caddy:
-    image: caddy
-    container_name: coverse-caddy
-    command: caddy reverse-proxy --from :80 --to fastapi:8080
-    ports:
-      - "80:80"
-    restart: always
-    depends_on:
-      - fastapi
+      # caddy:
+      #   image: caddy
+      #   container_name: coverse-caddy
+      #   command: caddy reverse-proxy --from :80 --to fastapi:8080
+      #   ports:
+      #     - "80:80"
+      #   restart: always
+      #   depends_on:
+      #     - fastapi
+      #   networks:
+      #     - server-net
+
+networks:
+  server-net:
+    driver: bridge
+    external: true
