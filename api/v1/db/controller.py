@@ -1,4 +1,5 @@
 # db.py
+from loguru import logger
 import httpx
 import json
 
@@ -21,15 +22,17 @@ class DatabaseController:
 
     async def get_connection(self) -> httpx.AsyncClient:
         if len(self._connection_pool) < self.max_pool_size:
-            print(f"Created new client: http://{self.host}:{self.port}")
+            logger.log("EVENT", f"DB Created new connection: http://{self.host}:{self.port}")
             client = httpx.AsyncClient(base_url=f"http://{self.host}:{self.port}", headers={"Accept": "application/json", "Content-Type":"text/plain", "NS":self.ns, "DB":self.db}, auth=self.auth)
             self._connection_pool[id(client)] = client
         else:
             client = next(iter(self._connection_pool.values()))
+            logger.log('EVENT', f"DB Reusing existing connection : {client}")
         return client
 
     async def close(self):
         for client_id in list(self._connection_pool.keys()):
+            logger.log("EVENT", f"DB Closing connection: {client_id}")
             await self._connection_pool[client_id].aclose()
             del self._connection_pool[client_id]
 
