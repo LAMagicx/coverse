@@ -1,5 +1,5 @@
 services:
-  coverse-db:
+  db:
     container_name: coverse-db
     image: surrealdb/surrealdb:latest
     ports:
@@ -22,14 +22,14 @@ services:
     environment:
         PYTHONDONTWRITEBYTECODE: 1
 
-  coverse-docs:
-    container_name: docs 
+  docs:
+    container_name: coverse-docs 
     build: ./docs 
     networks:
       - server-net
 
-  coverse-api:
-    container_name: api
+  api:
+    container_name: coverse-api
     env_file:
         - .env
     environment:
@@ -38,7 +38,7 @@ services:
     volumes:
       - ./api/:/api
     depends_on:
-      - coverse-db
+      - db
     networks:
       - server-net
     restart: always

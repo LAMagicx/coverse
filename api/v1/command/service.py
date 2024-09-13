@@ -1,4 +1,5 @@
 from fastapi import status
+from loguru import logger
 
 from v1.common.exceptions import BadRequestException
 from v1.common.schemas import Command, FetchCommands
@@ -18,6 +19,7 @@ class CommandService:
             else:
                 return fetched_data
         except Exception as e:
+            logger.exception(e)
             raise BadRequestException(str(e), status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     async def create_command(self, page_id: int, command: Command):
@@ -26,10 +28,12 @@ class CommandService:
             if page_commands := await self.fetch_page_command_limits(page_id):
                 page_commands = page_commands[0]
             else:
+
                 raise BadRequestException("Page doesn't exist", status_code=status.HTTP_404_NOT_FOUND)
 
             # check if command exists
             if command.name in page_commands["commands"]["name"]:
+
                 raise BadRequestException("Command exists", status_code=status.HTTP_409_CONFLICT)
 
             # test if limit reached
@@ -42,4 +46,5 @@ class CommandService:
             else:
                 return created_command
         except Exception as e:
+            logger.exception(e)
             raise BadRequestException(str(e), status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
