@@ -29,6 +29,7 @@ services:
       - server-net
 
   api:
+    # port 8080
     container_name: coverse-api
     env_file:
         - .env
