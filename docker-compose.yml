@@ -42,6 +42,9 @@ services:
     networks:
       - server-net
     restart: always
+    labels:
+      logging: "promtail"
+      logging_jobname: "coverse-api"
       # command: uvicorn api.main:api --host 0.0.0.0 --port 8080 --reload
     # healthcheck:
       #   test: curl --fail http://fastapi:8080/health || exit 1
