@@ -4,8 +4,6 @@ from utils.db import create_authenticated_session, get_page
 
 app = Flask(__name__)
 
-session = create_authenticated_session()
-
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -20,6 +18,7 @@ def home():
 
 @app.route("/page/<int:page_id>")
 def show_post(page_id: int):
+    _ = create_authenticated_session()
     page = get_page(page_id=page_id)
     if page is not None:
         print(page)
