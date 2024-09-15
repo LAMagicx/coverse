@@ -1,4 +1,5 @@
 .webapp.env
+!static/manifest.json
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
