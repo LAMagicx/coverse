@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coverse</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}" />
+    <link rel="icon" href="{{url_for('static', filename='icons/coverse_c_144.png')}}" type="image/png">
+    <link rel="icon" href="{{url_for('static', filename='icons/coverse_c_192.png')}}" type="image/png">
+    <link rel="icon" href="{{url_for('static', filename='icons/coverse_c_512.png')}}" type="image/png">
+    <link rel="apple-touch-icon" href="{{url_for('static', filename='icons/coverse_c_144.png')}}" type="image/png">
+    <link rel="apple-touch-icon" href="{{url_for('static', filename='icons/coverse_c_192.png')}}" type="image/png">
+    <link rel="apple-touch-icon" href="{{url_for('static', filename='icons/coverse_c_512.png')}}" type="image/png">
+</head>
+<body>
+
+<header>
+    <h1>Coverse</h1>
+    <div class="nav-icon">
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+    <div class="dropdown-menu">
+        <a href="/">About</a>
+        <a href="https://me.lamagicx.eu">Contact</a>
+    </div>
+</header>
+
+<div class="main-container">
+    {% block content %}
+    {% endblock %}
+</div>
+
+</body>
+</html>
+

@@ -1,0 +1,6 @@
+flask
+requests
+jinja2
+gunicorn
+pydantic
+typing

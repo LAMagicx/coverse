@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2 class="page-title">{{ page.title }}</h2>
+<p class="page-text">{{ page.text }}</p>
+
+<div class="button-container">
+    {% for command, page_id in zip(page.commands.name, page.commands.page) %}
+    <button onclick="window.location.href='/page/{{ page_id[5:] }}'">{{ command }}</button>
+    {% endfor %}
+</div>
+{% endblock %}
