@@ -1,9 +1,9 @@
-from typing import Literal
+from typing import Literal, Tuple
+import datetime as dt
 import requests
-import time
 import os
-
-from utils.schema import Page, CreatePage
+import json
+import base64
 
 
 class LoginError(Exception):
@@ -12,22 +12,33 @@ class LoginError(Exception):
         super().__init__(f"Login failed with status code: {status_code}")
 
 
-def fetch_access_token(username: str, password: str) -> str:
-    API_URL = os.environ.get("COVERSE_API_URL")
-    LOGIN_URL = API_URL + "/v1/auth/login"
+class BearerAuth(requests.auth.AuthBase):
+    def __init__(self, token):
+        self.token = token
+
+    def __call__(self, r):
+        r.headers["Authorization"] = f"Bearer {self.token}"
+        return r
+
+
+def fetch_access_token(
+    api_url: str, username: str, password: str
+) -> Tuple[str | None, int]:
+    login_url = api_url + "/v1/auth/login"
     response = requests.post(
-        LOGIN_URL,
+        login_url,
         headers={"Accept": "application/json", "Content-Type": "application/json"},
         json={"username": username, "password": password},
     )
     if response.status_code == 200:
-        return response.json()["token"]
+        return response.json()["token"], 200
     else:
-        raise LoginError(response.status_code)
+        # raise LoginError(response.status_code)
+        return None, response.status_code
 
 
 def create_authenticated_session() -> requests.Session:
-    global session
+    # """ deprecrated """"
     USERNAME = os.environ.get("COVERSE_USERNAME")
     PASSWORD = os.environ.get("COVERSE_PASSWORD")
     token = fetch_access_token(USERNAME, PASSWORD)
@@ -42,24 +53,41 @@ def create_authenticated_session() -> requests.Session:
     return session
 
 
+def refresh_token(token: str, api_url: str, username: str, password: str):
+    header, jwt, sig = token.split(".")
+    data = json.loads(base64.urlsafe_b64decode(pad_base64(jwt)).decode("utf-8"))
+    if data["exp"] <= dt.datetime.now().timestamp():
+        # token expired
+        new_token = fetch_access_token(api_url, username, password)
+        return new_token
+    return token
+
+
 def make_request(
-    method: Literal["GET", "POST"], endpoint: str, data: dict = {}, params: dict = {}
+    method: Literal["GET", "POST"],
+    endpoint: str,
+    data: dict = {},
+    params: dict = {},
+    token: str = "",
+    API_URL=os.environ.get("COVERSE_API_URL"),
 ) -> dict:
-    API_URL = os.environ.get("COVERSE_API_URL")
     if method == "GET":
-        response = session.get(API_URL + endpoint, data=data, params=params)
+        response = requests.get(
+            API_URL + endpoint, data=data, params=params, auth=BearerAuth(token)
+        )
     elif method == "POST":
-        response = session.post(API_URL + endpoint, json=data, params=params)
+        response = requests.post(
+            API_URL + endpoint, json=data, params=params, auth=BearerAuth(token)
+        )
     else:
         raise Exception(f"Request {type} not implemented")
 
     return response
 
 
-def get_page(page_id) -> Page | None:
-    for _ in range(3):
-        time.sleep(0.1)
-        res = make_request("GET", f"/v1/pages/{page_id}")
-        if res.status_code == 200:
-            return Page.validate(res.json())
-    return None
+def pad_base64(data):
+    """Makes sure base64 data is padded"""
+    missing_padding = len(data) % 4
+    if missing_padding != 0:
+        data += "=" * (4 - missing_padding)
+    return data

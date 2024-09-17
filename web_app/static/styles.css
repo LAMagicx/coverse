@@ -98,3 +98,37 @@ header h1 {
 .button-container button:hover {
     background-color: #ddd;
 }
+
+.intro {
+    text-align: center;
+    padding: 20px;
+}
+
+.input-container {
+    margin: 10px 0;
+}
+
+.button-container {
+    margin-top: 20px;
+}
+
+input {
+    padding: 8px;
+    width: 80%;
+    margin: 5px 0;
+}
+
+button {
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+a {
+  color: inherit; /* blue colors for links too */
+  text-decoration: inherit; /* no underline */
+}

@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Config</h1>
+  {% if error is defined %}
+    <p class="error">{{ error }}</p>
+  {% endif %}
+  <form id="config-form" method="post" action="/config">
+      <div class="input-container">
+          <label for="url">URL:</label>
+          <input type="text" id="url" name="url" value="{{ api_url }}" required>
+      </div>
+      <div class="input-container">
+          <label for="username">Username:</label>
+          <input type="text" id="username" name="username" value="{{ username }}" required>
+      </div>
+      <div class="input-container">
+          <label for="password">Password:</label>
+          <input type="password" id="password" name="password" required>
+      </div>
+      <div class="button-container">
+          <button type="submit" id="submit-btn" disabled>Submit</button>
+      </div>
+  </form>
+
+<script>
+document.getElementById('url').addEventListener('input', async function() {
+    const url = this.value;
+    const submitBtn = document.getElementById('submit-btn');
+
+    if (url) {
+        try {
+            const response = await fetch(url, { method: 'HEAD', mode: 'no-cors' });
+            if (response.ok || response.type === 'opaque') {
+                submitBtn.disabled = false;
+            } else {
+                submitBtn.disabled = true;
+            }
+        } catch (error) {
+            submitBtn.disabled = true;
+        }
+    } else {
+        submitBtn.disabled = true;
+    }
+});
+</script>
+{% endblock %}
+
