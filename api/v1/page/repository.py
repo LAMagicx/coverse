@@ -10,28 +10,36 @@ import numpy as np
 nlp = spacy.load("en_core_web_sm", enable=["attribute_ruler", "tagger", "lemmatizer"])
 model = TextEmbedding(model_name="BAAI/bge-small-en-v1.5")
 
+
 def embed(sentence: str, precision: int = 3) -> List[float]:
-    """ creates a vector embedding given a senctence """
-    lemma = " ".join(token.lemma_ for token in nlp(sentence) if not token.is_stop and not token.is_punct)
+    """creates a vector embedding given a senctence"""
+    lemma = " ".join(
+        token.lemma_
+        for token in nlp(sentence)
+        if not token.is_stop and not token.is_punct
+    )
     embedding = next(model.embed([lemma]))
     return np.round(embedding.astype(np.float64), precision).tolist()
 
+
 def create_insert_page_sql(page: Page) -> str:
-    """ creates the surrealdb sql to create the page and it's commands """
-    command_ids = [f"page_{page.id}_" + c.name.replace(' ', '_').lower() for c in page.commands]
+    """creates the surrealdb sql to create the page and it's commands"""
+    command_ids = [
+        f"page_{page.id}_" + c.name.replace(" ", "_").lower() for c in page.commands
+    ]
     page_create = f"""CREATE ONLY page:{page.id} SET title="{page.title}", text="{page.text}", embedding={embed(page.title + '. ' + page.text)}, limit="{page.limit}", commands=[{','.join([f"'command:{c_id}'" for c_id in command_ids])}];\n"""
     for c_id, c in zip(command_ids, page.commands):
         command_create = f"""CREATE ONLY 'command:{c_id}' SET name="{c.name}", text="{c.text}", page=page:{c.page}, required=[{','.join([f"'page:{page_id}'" for page_id in c.required])}];\n"""
         page_create += command_create
     return page_create
 
-class PageRepository(DatabaseController):
 
+class PageRepository(DatabaseController):
     def __init__(self):
         super().__init__()
 
     async def fetch_page(self, page_id: int) -> FetchPage:
-        """ selects one page given by the page_id from surreal """
+        """selects one page given by the page_id from surreal"""
         select_query = f"SELECT id, title, text, commands.name, commands.text, commands.page, commands.required FROM page:{page_id};"
         data = await anext(self.sql(select_query))
         if data:
@@ -40,7 +48,7 @@ class PageRepository(DatabaseController):
             return None
 
     async def fetch_all_pages(self) -> FetchPages:
-        """ fetch pages from database """
+        """fetch pages from database"""
         select_query = "SELECT id, title, text, commands.name, commands.text, commands.page, commands.required FROM page;"
         data = await anext(self.sql(select_query))
         if data:
@@ -61,14 +69,16 @@ class PageRepository(DatabaseController):
         return res
 
     async def search_pages(self, query: str, limit: int = 3):
-        res = await anext(self.sql(f"""
+        res = await anext(
+            self.sql(f"""
         SELECT title, id, commands.name,
           search::highlight('<b>', '</b>', 1) AS text,
           search::score(0) * 2 + search::score(1) * 1 AS score FROM page
         WHERE title @0@ '{query}' OR text @1@ '{query}'
         ORDER BY score DESC
         LIMIT {limit};
-        """))
+        """)
+        )
         return res
 
     async def semantic_search_pages(self, query: str, limit: int = 3):
@@ -84,5 +94,17 @@ class PageRepository(DatabaseController):
         _ = await anext(iter)
         res = await anext(iter)
         return res
-        
-        
+
+    async def find_parent_pages(self, page_id: int):
+        res = await anext(
+            self.sql(f"""
+                SELECT title, text, command.name, command.text
+                FROM (
+                    SELECT title, text, array::at(commands, array::find_index(commands.page, page:{page_id})) AS command
+                        FROM page
+                        WHERE commands.page CONTAINS page:{page_id}
+                        FETCH command
+                    );
+            """)
+        )
+        return res

@@ -1,7 +1,8 @@
 from flask import Flask, render_template, send_file, request, url_for, redirect
 from requests import status_codes
 from utils.db import fetch_access_token, make_request, refresh_token
-from utils.schema import Page
+from utils.schema import Page, CreatePage, Command
+from pydantic import ValidationError
 import os
 import time
 
@@ -29,6 +30,24 @@ def get_page(page_id) -> Page | None:
     return None
 
 
+def post_page(page: CreatePage):
+    res = make_request(
+        "POST",
+        f"/v1/pages/{page.id}",
+        data=page.model_dump(),
+        token=app.config["JWT_SECRET_KEY"],
+    )
+    if res.status_code == 201:
+        # success
+        return redirect(f"/page/{page.id}")
+    elif res.status_code == 409:
+        # page exists
+        return render_template("not_found.html", page_id=page.id)
+    else:
+        # other error
+        return render_template("404.html"), res.status_code
+
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template("404.html"), 404
@@ -50,7 +69,7 @@ def home():
 
 
 @app.route("/page/<int:page_id>")
-def show_post(page_id: int):
+def show_page(page_id: int):
     prev_command_text = request.args.get("command", default="", type=str)
     page = get_page(page_id=page_id)
     if page is not None:
@@ -62,6 +81,50 @@ def show_post(page_id: int):
             return render_template("page.html", page=page, zip=zip)
     else:
         return render_template("not_found.html", page_id=page_id)
+
+
+@app.route("/create/<int:page_id>", methods=["GET", "POST"])
+def create(page_id: int):
+    if request.method == "POST":
+        form_data = request.form.to_dict(flat=False)
+
+        # Parse commands from form data
+        commands = []
+        for i in range(len(form_data.get("commands[0][name]", []))):
+            try:
+                print(form_data[f"commands[{i}][required]"])
+                command = Command(
+                    name=form_data[f"commands[{i}][name]"][0],
+                    text=form_data[f"commands[{i}][text]"][0],
+                    page=form_data[f"commands[{i}][page]"][0],
+                    required=[
+                        req.strip()
+                        for req in form_data.get(f"commands[{i}][required]", [""])[
+                            0
+                        ].split(",")
+                        if req.strip()
+                    ],
+                )
+                commands.append(command)
+            except ValidationError as e:
+                print(f"Error in command {i + 1}: {e}", "error")
+                return render_template("create.html", page_id=page_id, error=e)
+
+        try:
+            page = CreatePage(
+                id=page_id,
+                title=form_data["title"][0],
+                text=form_data["text"][0],
+                limit=form_data["limit"][0],
+                commands=commands,
+            )
+            print(page)
+            post_page(page)
+        except ValidationError as e:
+            print(f"Error in page data: {e}", "error")
+            return render_template("create.html", page_id=page_id, error=e)
+
+    return render_template("create.html", page_id=page_id)
 
 
 @app.route("/config", methods=["GET", "POST"])

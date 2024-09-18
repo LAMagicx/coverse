@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Create Page</h1>
+
+  {% if error %}
+    <p class="error">{{ error }}</p>
+  {% endif %}
+
+  <form id="create-page-form" method="post" action="/create/{{ page_id }}">
+      <div class="input-container">
+          <label for="page-id">Page ID (Number):</label>
+          <input type="number" id="page-id" name="id" value="{{ page_id }}" required readonly>
+      </div>
+
+      <div class="input-container">
+          <label for="page-title">Page Title:</label>
+          <input type="text" id="page-title" name="title" required>
+      </div>
+
+      <div class="input-container">
+          <label for="page-text">Page Text:</label>
+          <textarea id="page-text" name="text" required></textarea>
+      </div>
+
+      <div class="input-container">
+          <label for="commands-limit">Commands Limit (Max 6):</label>
+          <input type="number" id="commands-limit" name="limit" min="1" max="6" required>
+      </div>
+
+      <div id="commands-container">
+          <!-- Initial command input fields -->
+          <div class="command-group">
+              <h3>Command 1</h3>
+              <label for="command-name-0">Command Name:</label>
+              <input type="text" id="command-name-0" name="commands[0][name]" required>
+
+              <label for="command-text-0">Command Text:</label>
+              <input type="text" id="command-text-0" name="commands[0][text]" required>
+
+              <label for="command-page-0">Command Page:</label>
+              <input type="text" id="command-page-0" name="commands[0][page]" required>
+
+              <label for="required-page-ids-0">Required Page IDs (Optional):</label>
+              <input type="text" id="required-page-ids-0" name="commands[0][required]" placeholder="Comma-separated list">
+          </div>
+      </div>
+
+      <div class="button-container">
+          <button type="button" id="add-command-btn">Add Another Command</button>
+          <button type="submit">Create Page</button>
+      </div>
+  </form>
+
+  <script>
+    document.getElementById('add-command-btn').addEventListener('click', function() {
+        const commandsContainer = document.getElementById('commands-container');
+        const currentCommandsCount = commandsContainer.children.length;
+        const commandsLimit = document.getElementById('commands-limit').value;
+
+        if (currentCommandsCount < commandsLimit) {
+            const commandGroup = document.createElement('div');
+            commandGroup.className = 'command-group';
+            commandGroup.innerHTML = `
+                <h3>Command ${currentCommandsCount + 1}</h3>
+                <label for="command-name-${currentCommandsCount}">Command Name:</label>
+                <input type="text" id="command-name-${currentCommandsCount}" name="commands[${currentCommandsCount}][name]" required>
+
+                <label for="command-text-${currentCommandsCount}">Command Text:</label>
+                <input type="text" id="command-text-${currentCommandsCount}" name="commands[${currentCommandsCount}][text]" required>
+
+                <label for="command-page-${currentCommandsCount}">Command Page:</label>
+                <input type="text" id="command-page-${currentCommandsCount}" name="commands[${currentCommandsCount}][page]" required>
+
+                <label for="required-page-ids-${currentCommandsCount}">Required Page IDs (Optional):</label>
+                <input type="text" id="required-page-ids-${currentCommandsCount}" name="commands[${currentCommandsCount}][required]" placeholder="Comma-separated list">
+            `;
+            commandsContainer.appendChild(commandGroup);
+        } else {
+            alert("Maximum number of commands reached.");
+        }
+    });
+  </script>
+
+{% endblock %}
+

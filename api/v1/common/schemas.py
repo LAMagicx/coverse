@@ -2,15 +2,18 @@
 from pydantic import BaseModel, TypeAdapter
 from typing import List, Optional
 
+
 class AuthDetails(BaseModel):
     username: str
     password: str
+
 
 class Command(BaseModel):
     name: str
     text: str
     page: str | int
     required: List[int | str] | None = []
+
 
 class Page(BaseModel):
     id: int | str
@@ -19,7 +22,9 @@ class Page(BaseModel):
     limit: int | str
     commands: List[Optional[Command]] | None = []
 
+
 Pages = TypeAdapter(List[Page])
+
 
 class FetchCommands(BaseModel):
     name: List[str]
@@ -27,13 +32,16 @@ class FetchCommands(BaseModel):
     page: List[str]
     requires: Optional[List[str]] | None = []
 
+
 class FetchPage(BaseModel):
     id: str
     title: str
     text: str
     commands: FetchCommands
 
+
 FetchPages = TypeAdapter(List[FetchPage])
+
 
 class PageQuery(BaseModel):
     id: str
@@ -42,4 +50,20 @@ class PageQuery(BaseModel):
     score: float
     commands: dict
 
+
 PageQueries = TypeAdapter(List[PageQuery])
+
+
+class ParentCommand(BaseModel):
+    name: str
+    text: str
+
+
+class ParentPage(BaseModel):
+    command: ParentCommand
+    id: str
+    text: str
+    title: str
+
+
+ParentPages = TypeAdapter(List[ParentPage])

@@ -42,6 +42,8 @@ services:
       - db
     networks:
       - server-net
+    ports:
+      - "8080:8080"
     restart: always
     labels:
       logging: "promtail"
@@ -65,19 +67,20 @@ services:
       #     - fastapi
       #   networks:
       #     - server-net
-  web:
+  pwa:
     container_name: coverse-pwa
     build: ./web_app
     volumes:
       - ./web_app/:/app
     depends_on:
       - api
+    ports:
+      - "8085:8085"
     env_file:
       - ./web_app/.webapp.env
     environment:
       - COVERSE_API_URL=https://coverse-api.lamagicx.eu/api
-    networks:
-      - server-net
+      # - COVERSE_API_URL=http://host.docker.internal:8080/api
     restart: always
 
 networks:
