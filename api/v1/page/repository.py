@@ -19,9 +19,9 @@ def embed(sentence: str, precision: int = 3) -> List[float]:
 def create_insert_page_sql(page: Page) -> str:
     """ creates the surrealdb sql to create the page and it's commands """
     command_ids = [f"page_{page.id}_" + c.name.replace(' ', '_').lower() for c in page.commands]
-    page_create = f"""CREATE ONLY page:{page.id} SET title="{page.title}", text="{page.text}", embedding={embed(page.title + '. ' + page.text)}, limit="{page.limit}", commands=[{','.join([f"'command:{c_id}'" for c_id in command_ids])}];\n"""
+    page_create = f"""CREATE ONLY page:{page.id} SET title="{page.title}", text="{page.text}", embedding={embed(page.title + '. ' + page.text)}, limit="{page.limit}", commands=[{','.join([f"command:{c_id}" for c_id in command_ids])}];\n"""
     for c_id, c in zip(command_ids, page.commands):
-        command_create = f"""CREATE ONLY 'command:{c_id}' SET name="{c.name}", text="{c.text}", page=page:{c.page}, required=[{','.join([f"'page:{page_id}'" for page_id in c.required])}];\n"""
+        command_create = f"""CREATE ONLY command:{c_id} SET name="{c.name}", text="{c.text}", page=page:{c.page}, required=[{','.join([f"'page:{page_id}'" for page_id in c.required])}];\n"""
         page_create += command_create
     return page_create
 
