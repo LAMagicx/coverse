@@ -2,11 +2,14 @@
 
 {% block content %}
 <h2 class="page-title">{{ page.title }}</h2>
+{% if command_text is defined %}
+<p class="command-text page-text"> {{ command_text }}
+{% endif %}
 <p class="page-text">{{ page.text }}</p>
 
 <div class="button-container">
-    {% for command, page_id in zip(page.commands.name, page.commands.page) %}
-    <button onclick="window.location.href='/page/{{ page_id[5:] }}'">{{ command }}</button>
+    {% for command, page_id, text in zip(page.commands.name, page.commands.page, page.commands.text) %}
+    <button onclick="window.location.href='/page/{{ page_id[5:] }}?command={{ text }}'">{{ command }}</button>
     {% endfor %}
 </div>
 {% endblock %}
