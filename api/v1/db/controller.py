@@ -23,7 +23,7 @@ class DatabaseController:
     async def get_connection(self) -> httpx.AsyncClient:
         if len(self._connection_pool) < self.max_pool_size:
             logger.log("EVENT", f"DB Created new connection: http://{self.host}:{self.port}")
-            client = httpx.AsyncClient(base_url=f"http://{self.host}:{self.port}", headers={"Accept": "application/json", "Content-Type":"text/plain", "NS":self.ns, "DB":self.db}, auth=self.auth)
+            client = httpx.AsyncClient(base_url=f"http://{self.host}:{self.port}", headers={"Accept": "application/json", "Content-Type":"text/plain", "surreal-ns":self.ns, "surreal-db":self.db}, auth=self.auth)
             self._connection_pool[id(client)] = client
         else:
             client = next(iter(self._connection_pool.values()))
@@ -40,8 +40,15 @@ class DatabaseController:
         conn = await self.get_connection()
         res = await conn.post('/sql', data=query)
         res_json = json.loads(res.content)
-        for response in res_json:
-            if response['status'] == 'OK':
-                yield response['result']
+        if isinstance(res_json, list):
+            for response in res_json:
+                if not isinstance(response, dict):
+                    logger.log("WARNING", f"Unknown surrealdb response: {response} - {type(response)}")
+                    yield []
+                elif response['status'] == 'OK':
+                    yield response['result']
+            else:
+                yield []
         else:
+            logger.log("WARNING", f"Unknown surrealdb response: {res_json} - {type(res_json)}")
             yield []

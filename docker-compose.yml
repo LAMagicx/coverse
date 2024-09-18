@@ -1,16 +1,18 @@
 services:
   db:
     container_name: coverse-db
-    image: surrealdb/surrealdb:latest
+    image: surrealdb/surrealdb:v2.0.1
     ports:
       - "8000:8000"
         # volumes:
         #   - ./mydata:/mydata
-    command: 
+    command:
       - start
-      - --log=trace
-      - --user=root
-      - --pass=root
+      - --log=warn
+      - --user=${SURREAL_USERNAME}
+      - --pass=${SURREAL_PASSWORD}
+      - --no-banner
+      - --strict
     networks:
       - server-net
     restart: always
@@ -20,13 +22,32 @@ services:
       #   timeout: 5s
       #   retries: 2
     environment:
-        PYTHONDONTWRITEBYTECODE: 1
+      - PYTHONDONTWRITEBYTECODE=1
+      - SURREAL_EXPERIMENTAL_GRAPHQL=true
 
-  docs:
-    container_name: coverse-docs 
-    build: ./docs 
+  migrate:
+    container_name: coverse-db-migrate
+    image: surrealdb/surrealdb:v2.0.1
+    volumes:
+      - ./surrealdb.surql:/etc/surrealdb.surql
+    command:
+      - import 
+      - --endpoint=http://coverse-db:8000
+      - --user=${SURREAL_USERNAME}
+      - --pass=${SURREAL_PASSWORD}
+      - --ns=test
+      - --db=test
+      - /etc/surrealdb.surql
     networks:
       - server-net
+    depends_on:
+      - db
+
+  # docs:
+  #   container_name: coverse-docs 
+  #   build: ./docs 
+  #   networks:
+  #     - server-net
 
   api:
     # port 8080
@@ -40,6 +61,7 @@ services:
       - ./api/:/api
     depends_on:
       - db
+      - migrate
     networks:
       - server-net
     ports:
