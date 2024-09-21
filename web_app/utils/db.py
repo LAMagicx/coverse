@@ -41,7 +41,7 @@ def create_authenticated_session() -> requests.Session:
     # """ deprecrated """"
     USERNAME = os.environ.get("COVERSE_USERNAME")
     PASSWORD = os.environ.get("COVERSE_PASSWORD")
-    token = fetch_access_token(USERNAME, PASSWORD)
+    token, _ = fetch_access_token(USERNAME, PASSWORD)
     session = requests.Session()
     session.headers.update(
         {
@@ -58,7 +58,7 @@ def refresh_token(token: str, api_url: str, username: str, password: str):
     data = json.loads(base64.urlsafe_b64decode(pad_base64(jwt)).decode("utf-8"))
     if data["exp"] <= dt.datetime.now().timestamp():
         # token expired
-        new_token = fetch_access_token(api_url, username, password)
+        new_token, _ = fetch_access_token(api_url, username, password)
         return new_token
     return token
 

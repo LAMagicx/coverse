@@ -2,10 +2,10 @@ services:
   db:
     container_name: coverse-db
     image: surrealdb/surrealdb:v2.0.1
-    ports:
-      - "8000:8000"
-        # volumes:
-        #   - ./mydata:/mydata
+    # ports:
+      # - "8000:8000"
+    volumes:
+      - ./coverse-data/:/mydata
     command:
       - start
       - --log=warn
