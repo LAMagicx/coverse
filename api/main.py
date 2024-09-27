@@ -34,5 +34,8 @@ api.add_middleware(
     allow_headers=["*"],
 )
 
+@api.get("/")
+async def healthcheck():
+    return {"status": "OK"}
 
 api.include_router(api_router, prefix="/api/v1")
