@@ -10,3 +10,4 @@ spacy
 fastembed
 python-json-logger
 loguru
+slowapi
