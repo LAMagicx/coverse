@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from slowapi.errors import RateLimitExceeded
+from slowapi.middleware import SlowAPIMiddleware
 from slowapi import _rate_limit_exceeded_handler
 
 from v1.common.loggers import create_logger
@@ -22,6 +23,7 @@ api = FastAPI(lifespan=lifespan)
 
 api.state.limiter = limiter
 api.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+api.add_middleware(SlowAPIMiddleware)
 
 logger = create_logger(__name__)
 api.logger = logger
@@ -34,8 +36,10 @@ api.add_middleware(
     allow_headers=["*"],
 )
 
+
 @api.get("/")
 async def healthcheck():
     return {"status": "OK"}
+
 
 api.include_router(api_router, prefix="/api/v1")

@@ -57,6 +57,8 @@ services:
     environment:
       - WATCHFILES_FORCE_POLLING=true
     build: ./api
+    ports:
+      - "8080:8080"
     volumes:
       - ./api/:/api
     depends_on:
@@ -110,3 +112,6 @@ networks:
   server-net:
     driver: bridge
     external: true
+
+volumes:
+  coverse-data:

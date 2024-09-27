@@ -11,7 +11,6 @@ from v1.common.schemas import (
     ParentPage,
     ParentPages,
 )
-from v1.common.limiter import limiter
 from .service import PageService
 
 service = PageService()
@@ -19,7 +18,6 @@ router = APIRouter()
 
 
 @router.post("/")
-@limiter.limit("1/minute")
 async def upload_pages(pages: List[Page], request: Request):
     """POST /pages/ - create pages"""
     created_pages = []
@@ -30,7 +28,6 @@ async def upload_pages(pages: List[Page], request: Request):
 
 
 @router.post("/{page_id}")
-@limiter.limit("1/minute")
 async def upload_page(page_id: int, page: Page, request: Request):
     """POST /pages/{page_id} - create page with id"""
     page.id = page_id
@@ -39,7 +36,6 @@ async def upload_page(page_id: int, page: Page, request: Request):
 
 
 @router.get("/")
-@limiter.limit("1/minute")
 async def get_pages(request: Request) -> List[FetchPage]:
     """GET /pages/ - fetch all pages"""
     pages = await service.fetch_all_pages()
@@ -49,7 +45,6 @@ async def get_pages(request: Request) -> List[FetchPage]:
 
 
 @router.get("/{page_id}")
-@limiter.limit("1/minute")
 async def get_page(page_id: int, request: Request) -> FetchPage:
     """GET /pages/ - fetch a page from id"""
     page = await service.fetch_page(page_id=page_id)
@@ -57,7 +52,6 @@ async def get_page(page_id: int, request: Request) -> FetchPage:
 
 
 @router.delete("/{page_id}")
-@limiter.limit("1/minute")
 async def delete_page(page_id: int, request: Request) -> dict:
     """DELETE /pages/{page_id} - delete a page from id
     should be only run by admin"""
@@ -66,7 +60,6 @@ async def delete_page(page_id: int, request: Request) -> dict:
 
 
 @router.get("/search-text/{query}")
-@limiter.limit("1/minute")
 async def search_pages(query: str, request: Request) -> List[PageQuery]:
     """GET /pages/search/{query} - queries pages and returns close pages"""
     pages = await service.search_pages(query)
@@ -76,7 +69,6 @@ async def search_pages(query: str, request: Request) -> List[PageQuery]:
 
 
 @router.get("/search-semantic/{query}")
-@limiter.limit("1/minute")
 async def search_pages(query: str, request: Request) -> List[PageQuery]:
     """GET /pages/search/{query} - queries pages and returns close pages"""
     pages = await service.semantic_search_pages(query)
@@ -86,7 +78,6 @@ async def search_pages(query: str, request: Request) -> List[PageQuery]:
 
 
 @router.get("/parent/{page_id}")
-@limiter.limit("1/minute")
 async def find_parent_pages(page_id: int) -> List[ParentPage]:
     """GET /pages/parent/{page_id} - find pages that point to search page"""
     parents = await service.find_parent_pages(page_id)
