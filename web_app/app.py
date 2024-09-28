@@ -40,6 +40,14 @@ def post_page(page: CreatePage):
     if res.status_code == 201:
         # success
         return redirect(f"/page/{page.id}")
+    if res.status_code == 422:
+        # unprossable entity
+        return render_template(
+            "create.html",
+            page_id=page.id,
+            error="Error in the page. Your text is probably too long.",
+            page=page,
+        )
     elif res.status_code == 409:
         # page exists
         return render_template("not_found.html", page_id=page.id)
@@ -88,11 +96,13 @@ def create(page_id: int):
     if request.method == "POST":
         form_data = request.form.to_dict(flat=False)
 
+        # {'id': ['0'], 'title': ['werew'], 'text': ['qwrqwr'], 'limit': ['2'], 'commands[0][name]': ['qwrqwr'], 'commands[0][text]': ['qwrqwr'], 'commands[0][page]': ['1'], 'commands[0][required]': [''], 'commands[1][name]': ['qwrqwr'], 'commands[1][text]': ['qwrqrw'], 'commands[1][page]': ['2'], 'commands[1][required]': ['']}
         # Parse commands from form data
         commands = []
-        for i in range(len(form_data.get("commands[0][name]", []))):
+        for i in range(int(form_data.get("limit", ["0"])[0])):
+            if f"commands[{i}][name]" not in form_data.keys():
+                break
             try:
-                print(form_data[f"commands[{i}][required]"])
                 command = Command(
                     name=form_data[f"commands[{i}][name]"][0],
                     text=form_data[f"commands[{i}][text]"][0],
@@ -102,7 +112,7 @@ def create(page_id: int):
                         for req in form_data.get(f"commands[{i}][required]", [""])[
                             0
                         ].split(",")
-                        if req.strip()
+                        if req.strip().isdecimal()
                     ],
                 )
                 commands.append(command)
@@ -118,8 +128,7 @@ def create(page_id: int):
                 limit=form_data["limit"][0],
                 commands=commands,
             )
-            print(page)
-            post_page(page)
+            return post_page(page)
         except ValidationError as e:
             print(f"Error in page data: {e}", "error")
             return render_template("create.html", page_id=page_id, error=e)

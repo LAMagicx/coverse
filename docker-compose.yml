@@ -1,7 +1,7 @@
 services:
   db:
     container_name: coverse-db
-    image: surrealdb/surrealdb:latest
+    image: surrealdb/surrealdb:v2.0.2
     # ports:
       # - "8000:8000"
     volumes:
@@ -13,17 +13,15 @@ services:
       - --pass=${SURREAL_PASSWORD}
       - --no-banner
       - --strict
-      # - file:/mydata/mydatabase.db
-      # - rocksdb://mydata/database.db
       - surrealkv://mydata/database.db
     networks:
       - server-net
     restart: always
-    healthcheck:
-      test: surreal isready --conn http://0.0.0.0:8000 || exit 1
-      interval: 60s
-      timeout: 5s
-      retries: 2
+    # healthcheck:
+    #   test: /surreal isready
+    #   interval: 10s
+    #   timeout: 5s
+    #   retries: 2
     environment:
       - PYTHONDONTWRITEBYTECODE=1
       - SURREAL_EXPERIMENTAL_GRAPHQL=true
@@ -44,13 +42,8 @@ services:
     networks:
       - server-net
     depends_on:
-      - db
-
-  # docs:
-  #   container_name: coverse-docs 
-  #   build: ./docs 
-  #   networks:
-  #     - server-net
+      db:
+        condition: service_started
 
   api:
     # port 8080
@@ -65,21 +58,50 @@ services:
     volumes:
       - ./api/:/api
     depends_on:
-      - db
-      - migrate
+      db:
+        condition: service_started
+      migrate:
+        condition: service_completed_successfully
     networks:
       - server-net
     restart: always
     labels:
       logging: "promtail"
       logging_jobname: "coverse-api"
-      # command: uvicorn api.main:api --host 0.0.0.0 --port 8080 --reload
-    # healthcheck:
-      #   test: curl --fail http://fastapi:8080/health || exit 1
-      #   interval: 60s
-      #   timeout: 10s
-      #   retries: 3
-      #   start_period: 10s
+    healthcheck:
+      test: curl --fail http://0.0.0.0:8080/health || exit 1
+      interval: 120s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  pwa:
+    # port 8085
+    container_name: coverse-pwa
+    build: ./web_app
+    ports:
+      - "8085:8085"
+    volumes:
+      - ./web_app/:/app
+    depends_on:
+      api:
+        condition: service_healthy
+    env_file:
+      - ./web_app/.webapp.env
+    environment:
+      - COVERSE_API_URL=http://coverse-api:8080/api
+      # - COVERSE_API_URL=https://coverse-api.lamagicx.eu/api
+      # - COVERSE_API_URL=http://host.docker.internal:8080/api
+    restart: always
+    # include in server net for caddy.
+    networks:
+      - server-net
+
+  # docs:
+  #   container_name: coverse-docs 
+  #   build: ./docs 
+  #   networks:
+  #     - server-net
 
       # caddy:
       #   image: caddy
@@ -92,24 +114,6 @@ services:
       #     - fastapi
       #   networks:
       #     - server-net
-  pwa:
-    # port 8085
-    container_name: coverse-pwa
-    build: ./web_app
-    volumes:
-      - ./web_app/:/app
-    depends_on:
-      - api
-    env_file:
-      - ./web_app/.webapp.env
-    environment:
-      - COVERSE_API_URL=http://coverse-api:8080/api
-      # - COVERSE_API_URL=https://coverse-api.lamagicx.eu/api
-      # - COVERSE_API_URL=http://host.docker.internal:8080/api
-    restart: always
-    # include in server net for caddy.
-    networks:
-      - server-net
 
 networks:
   server-net:

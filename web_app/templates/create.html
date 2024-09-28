@@ -15,19 +15,39 @@
 
       <div class="input-container">
           <label for="page-title">Page Title:</label>
-          <input type="text" id="page-title" name="title" required>
+          <input type="text" id="page-title" name="title" {% if page %} value="{{ page.title }}" {% endif %} required>
       </div>
 
       <div class="input-container">
           <label for="page-text">Page Text:</label>
-          <textarea id="page-text" name="text" required></textarea>
+          <textarea id="page-text" name="text" required>{% if page %} {{ page.text }} {% endif %}</textarea>
       </div>
 
       <div class="input-container">
           <label for="commands-limit">Commands Limit (Max 6):</label>
-          <input type="number" id="commands-limit" name="limit" min="1" max="6" required>
+          <input type="number" id="commands-limit" name="limit" min="1" max="6" {% if page %} value="{{ page.limit }}" {% endif %} required>
       </div>
 
+      {% if page %}
+      <div id="commands-container">
+          {% for command in page.commands %}
+          <div class="command-group">
+              <h3>Command {{ loop.index }}</h3>
+              <label for="command-name-{{ loop.index }}">Command Name:</label>
+              <input type="text" id="command-name-{{ loop.index }}" name="commands[{{ loop.index }}][name]" value="{{ command.name }}" required>
+
+              <label for="command-text-{{ loop.index }}">Command Text:</label>
+              <input type="text" id="command-text-{{ loop.index }}" name="commands[{{ loop.index }}][text]" value="{{ command.text }}" required>
+
+              <label for="command-page-{{ loop.index }}">Command Page:</label>
+              <input type="text" id="command-page-{{ loop.index }}" name="commands[{{ loop.index }}][page]" value="{{ command.page }}" required>
+
+              <label for="required-page-ids-{{ loop.index }}">Required Page IDs (Optional):</label>
+              <input type="text" id="required-page-ids-{{ loop.index }}" name="commands[{{ loop.index }}][required]" value="{{ command.required|join(', ') }}" placeholder="Comma-separated list">
+          </div>
+          {% endfor %}
+      </div>
+      {% else %}
       <div id="commands-container">
           <!-- Initial command input fields -->
           <div class="command-group">
@@ -45,6 +65,7 @@
               <input type="text" id="required-page-ids-0" name="commands[0][required]" placeholder="Comma-separated list">
           </div>
       </div>
+      {% endif %}
 
       <div class="button-container">
           <button type="button" id="add-command-btn">Add Another Command</button>

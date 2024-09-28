@@ -37,7 +37,7 @@ api.add_middleware(
 )
 
 
-@api.get("/")
+@api.get("/health")
 async def healthcheck():
     return {"status": "OK"}
 
