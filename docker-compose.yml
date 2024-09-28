@@ -5,7 +5,7 @@ services:
     # ports:
       # - "8000:8000"
     volumes:
-      - ./coverse-data/:/mydata
+      - ./coverse-data/database.db:/database.db
     command:
       - start
       - --log=warn
@@ -13,6 +13,7 @@ services:
       - --pass=${SURREAL_PASSWORD}
       - --no-banner
       - --strict
+      - file://database.db
     networks:
       - server-net
     restart: always
@@ -112,6 +113,3 @@ networks:
   server-net:
     driver: bridge
     external: true
-
-volumes:
-  coverse-data:

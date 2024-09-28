@@ -1,25 +1,25 @@
 # api_v1/schemas.py
-from pydantic import BaseModel, TypeAdapter
+from pydantic import BaseModel, TypeAdapter, Field
 from typing import List, Optional
 
 
 class AuthDetails(BaseModel):
-    username: str
-    password: str
+    username: str = Field(..., max_length=16)
+    password: str = Field(..., max_length=32)
 
 
 class Command(BaseModel):
-    name: str
-    text: str
-    page: str | int
-    required: List[int | str] | None = []
+    name: str = Field(..., max_length=32)
+    text: str = Field(..., max_length=32)
+    page: int = Field(ge=0, le=1024)
+    required: List[int] | None = []
 
 
 class Page(BaseModel):
-    id: int | str
-    title: str
-    text: str
-    limit: int | str
+    id: int = Field(ge=0, le=1024)
+    title: str = Field(..., max_length=32)
+    text: str = Field(..., max_length=258)
+    limit: int = Field(ge=1, le=8)
     commands: List[Optional[Command]] | None = []
 
 

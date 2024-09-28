@@ -164,3 +164,4 @@ cython_debug/
 .config
 
 *.json
+coverse-data/database.db/
