@@ -50,5 +50,5 @@ class DatabaseController:
             else:
                 yield []
         else:
-            logger.log("WARNING", f"Unknown surrealdb response: {res_json} - {type(res_json)}")
+            logger.log("WARNING", f"Unknown surrealdb response: {res_json} - {type(res_json)} - {query}")
             yield []
