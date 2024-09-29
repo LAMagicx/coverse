@@ -31,6 +31,7 @@ def get_page(page_id) -> Page | None:
 
 
 def post_page(page: CreatePage):
+    print(page.model_dump())
     res = make_request(
         "POST",
         f"/v1/pages/{page.id}",
@@ -42,6 +43,7 @@ def post_page(page: CreatePage):
         return redirect(f"/page/{page.id}")
     if res.status_code == 422:
         # unprossable entity
+        print("422", page)
         return render_template(
             "create.html",
             page_id=page.id,
@@ -106,9 +108,9 @@ def create(page_id: int):
                 command = Command(
                     name=form_data[f"commands[{i}][name]"][0],
                     text=form_data[f"commands[{i}][text]"][0],
-                    page=form_data[f"commands[{i}][page]"][0],
+                    page=int(form_data[f"commands[{i}][page]"][0]),
                     required=[
-                        req.strip()
+                        int(req.strip())
                         for req in form_data.get(f"commands[{i}][required]", [""])[
                             0
                         ].split(",")
@@ -125,7 +127,7 @@ def create(page_id: int):
                 id=page_id,
                 title=form_data["title"][0],
                 text=form_data["text"][0],
-                limit=form_data["limit"][0],
+                limit=int(form_data["limit"][0]),
                 commands=commands,
             )
             return post_page(page)
