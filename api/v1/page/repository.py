@@ -26,7 +26,8 @@ def embed(sentence: str, precision: int = 3) -> List[float]:
 def create_insert_page_sql(page: Page) -> str:
     """creates the surrealdb sql to create the page and it's commands"""
     command_ids = [
-        f"page_{page.id}_" + re.sub(r'\W+', '', c.name.replace(" ", "_").lower()) for c in page.commands
+        f"page_{page.id}_" + re.sub(r"\W+", "", c.name.replace(" ", "_").lower())
+        for c in page.commands
     ]
     page_create = f"""CREATE ONLY page:{page.id} SET title="{page.title}", text="{page.text}", embedding={embed(page.title + '. ' + page.text)}, limit={page.limit}, commands=[{','.join([f"command:{c_id}" for c_id in command_ids])}];\n"""
     for c_id, c in zip(command_ids, page.commands):
