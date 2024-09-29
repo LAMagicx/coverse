@@ -43,7 +43,7 @@ class PageRepository(DatabaseController):
         select_query = f"SELECT id, title, text, commands.name, commands.text, commands.page, commands.required FROM page:{page_id};"
         data = await anext(self.sql(select_query))
         if data:
-            return FetchPage.validate(data[0])
+            return FetchPage.model_validate(data[0])
         else:
             return None
 

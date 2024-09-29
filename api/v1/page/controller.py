@@ -5,11 +5,8 @@ from typing import List
 from v1.common.schemas import (
     Page,
     FetchPage,
-    FetchPages,
     PageQuery,
-    PageQueries,
     ParentPage,
-    ParentPages,
 )
 from .service import PageService
 
@@ -48,7 +45,7 @@ async def get_pages(request: Request) -> List[FetchPage]:
 async def get_page(page_id: int, request: Request) -> FetchPage:
     """GET /pages/ - fetch a page from id"""
     page = await service.fetch_page(page_id=page_id)
-    return JSONResponse(status_code=status.HTTP_200_OK, content=page.dict())
+    return JSONResponse(status_code=status.HTTP_200_OK, content=page.model_dump())
 
 
 @router.delete("/{page_id}")
@@ -56,11 +53,11 @@ async def delete_page(page_id: int, request: Request) -> dict:
     """DELETE /pages/{page_id} - delete a page from id
     should be only run by admin"""
     page = await service.delete_page(page_id=page_id)
-    return JSONResponse(status_code=status.HTTP_202_ACCEPTED, content=page.dict())
+    return JSONResponse(status_code=status.HTTP_202_ACCEPTED, content=page.model_dump())
 
 
 @router.get("/search-text/{query}")
-async def search_pages(query: str, request: Request) -> List[PageQuery]:
+async def search_pages_words(query: str, request: Request) -> List[PageQuery]:
     """GET /pages/search/{query} - queries pages and returns close pages"""
     pages = await service.search_pages(query)
     return JSONResponse(
@@ -69,7 +66,7 @@ async def search_pages(query: str, request: Request) -> List[PageQuery]:
 
 
 @router.get("/search-semantic/{query}")
-async def search_pages(query: str, request: Request) -> List[PageQuery]:
+async def search_pages_semantic(query: str, request: Request) -> List[PageQuery]:
     """GET /pages/search/{query} - queries pages and returns close pages"""
     pages = await service.semantic_search_pages(query)
     return JSONResponse(

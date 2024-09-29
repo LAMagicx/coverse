@@ -5,8 +5,8 @@ import json
 
 from v1.common.settings import DB_HOST, DB_PORT, DB_USER, DB_PASS, DB_NS, DB_DB
 
-class DatabaseController:
 
+class DatabaseController:
     def __init__(self):
         self.host = DB_HOST
         self.port = DB_PORT
@@ -22,12 +22,23 @@ class DatabaseController:
 
     async def get_connection(self) -> httpx.AsyncClient:
         if len(self._connection_pool) < self.max_pool_size:
-            logger.log("EVENT", f"DB Created new connection: http://{self.host}:{self.port}")
-            client = httpx.AsyncClient(base_url=f"http://{self.host}:{self.port}", headers={"Accept": "application/json", "Content-Type":"text/plain", "surreal-ns":self.ns, "surreal-db":self.db}, auth=self.auth)
+            logger.log(
+                "EVENT", f"DB Created new connection: http://{self.host}:{self.port}"
+            )
+            client = httpx.AsyncClient(
+                base_url=f"http://{self.host}:{self.port}",
+                headers={
+                    "Accept": "application/json",
+                    "Content-Type": "text/plain",
+                    "surreal-ns": self.ns,
+                    "surreal-db": self.db,
+                },
+                auth=self.auth,
+            )
             self._connection_pool[id(client)] = client
         else:
             client = next(iter(self._connection_pool.values()))
-            logger.log('EVENT', f"DB Reusing existing connection : {client}")
+            logger.log("EVENT", f"DB Reusing existing connection : {client}")
         return client
 
     async def close(self):
@@ -38,17 +49,23 @@ class DatabaseController:
 
     async def sql(self, query: str = "") -> dict:
         conn = await self.get_connection()
-        res = await conn.post('/sql', data=query)
+        res = await conn.post("/sql", data=query)
         res_json = json.loads(res.content)
         if isinstance(res_json, list):
             for response in res_json:
                 if not isinstance(response, dict):
-                    logger.log("WARNING", f"Unknown surrealdb response: {response} - {type(response)}")
+                    logger.log(
+                        "WARNING",
+                        f"Unknown surrealdb response: {response} - {type(response)}",
+                    )
                     yield []
-                elif response['status'] == 'OK':
-                    yield response['result']
+                elif response["status"] == "OK":
+                    yield response["result"]
             else:
                 yield []
         else:
-            logger.log("WARNING", f"Unknown surrealdb response: {res_json} - {type(res_json)} - {query}")
+            logger.log(
+                "WARNING",
+                f"Unknown surrealdb response: {res_json} - {type(res_json)} - {query}",
+            )
             yield []
