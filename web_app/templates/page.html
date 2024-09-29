@@ -8,8 +8,10 @@
 <p class="page-text">{{ page.text }}</p>
 
 <div class="button-container">
-    {% for command, page_id, text in zip(page.commands.name, page.commands.page, page.commands.text) %}
-    <button onclick="window.location.href='/page/{{ page_id[5:] }}?command={{ text }}'">{{ command }}</button>
+    {% for command, page_id, text, show in zip(page.commands.name, page.commands.page, page.commands.text, allowed) %}
+    {% if show %}
+    	<button onclick="window.location.href='/page/{{ page_id[5:] }}?command={{ text }}'">{{ command }}</button>
+    {% endif %}
     {% endfor %}
 </div>
 {% endblock %}

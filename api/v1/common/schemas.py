@@ -30,7 +30,7 @@ class FetchCommands(BaseModel):
     name: List[str]
     text: List[str]
     page: List[str]
-    requires: Optional[List[str]] | None = []
+    required: List[List[Optional[str]]] = []
 
 
 class FetchPage(BaseModel):

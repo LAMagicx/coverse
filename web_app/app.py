@@ -1,14 +1,19 @@
-from flask import Flask, render_template, send_file, request, url_for, redirect
+from flask import Flask, render_template, send_file, request, url_for, redirect, session
+from flask_session import Session
 from requests import status_codes
 from utils.db import fetch_access_token, make_request, refresh_token
 from utils.schema import Page, CreatePage, Command
 from pydantic import ValidationError
 import os
 import time
+import hashlib
 
 app = Flask(__name__)
 
 # Configuration
+
+app.config["SESSION_TYPE"] = 'cachelib'
+app.secret_key = os.environ.get("COVERSE_SECRET_KEY")
 app.config["SECRET_KEY"] = os.environ.get("COVERSE_SECRET_KEY")
 app.config["USERNAME"] = os.environ.get("COVERSE_USERNAME")
 app.config["PASSWORD"] = os.environ.get("COVERSE_PASSWORD")
@@ -17,16 +22,16 @@ app.config["JWT_SECRET_KEY"], _ = fetch_access_token(
     app.config["API_URL"], app.config["USERNAME"], app.config["PASSWORD"]
 )
 app.config["JWT_TOKEN_LOCATION"] = ["headers"]
+Session(app)
 
-
-def get_page(page_id) -> Page | None:
-    for _ in range(3):
-        time.sleep(0.1)
-        res = make_request(
-            "GET", f"/v1/pages/{page_id}", token=app.config["JWT_SECRET_KEY"]
-        )
-        if res.status_code == 200:
-            return Page.model_validate(res.json())
+def get_page(page_id: int, uid: str) -> Page | None:
+    res = make_request(
+        "GET", f"/v1/pages/{page_id}", token=app.config["JWT_SECRET_KEY"]
+    )
+    if res.status_code == 200:
+        print(res.json())
+        session['visits'][uid].append(page_id)
+        return Page.model_validate(res.json())
     return None
 
 
@@ -65,6 +70,8 @@ def page_not_found(e):
 
 @app.before_request
 def check_token():
+    if 'visits' not in session:
+        session['visits'] = {}
     app.config["JWT_SECRET_KEY"] = refresh_token(
         app.config["JWT_SECRET_KEY"],
         app.config["API_URL"],
@@ -75,17 +82,33 @@ def check_token():
 
 @app.route("/")
 def home():
+    print(session)
     return render_template("home.html")
 
 
 @app.route("/page/<int:page_id>")
 def show_page(page_id: int):
+    # manage session
+    if 'user-id' in session:
+        uid = session['user-id']
+    else:
+        ua = request.headers.get('User-Agent')
+        ip = request.access_route[-1]
+        uid = f"{ip}_{hashlib.sha1(ua.encode('utf-8')).hexdigest()[:8]}"
+        print(f"New user: {uid}")
+        session['user-id'] = uid
+
+    if uid not in session['visits']:
+        session['visits'][uid] = []
+
     prev_command_text = request.args.get("command", default="", type=str)
-    page = get_page(page_id=page_id)
+    page = get_page(page_id=page_id, uid=uid)
     if page is not None:
         if prev_command_text != "":
+            print(page.commands)
+            allowed_commands = [set([p[5:] for p in r]).issubset(session['visits'][uid]) for r in page.commands.required]
             return render_template(
-                "page.html", page=page, command_text=prev_command_text, zip=zip
+                "page.html", page=page, command_text=prev_command_text, allowed=allowed_commands, zip=zip
             )
         else:
             return render_template("page.html", page=page, zip=zip)

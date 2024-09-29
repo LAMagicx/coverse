@@ -24,6 +24,7 @@ class Commands(BaseModel):
     name: List[str]
     text: List[str]
     page: List[str]
+    required: List[Optional[List[str]]] = []
 
 
 class Page(BaseModel):

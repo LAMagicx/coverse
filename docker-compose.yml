@@ -69,12 +69,12 @@ services:
     labels:
       logging: "promtail"
       logging_jobname: "coverse-api"
-    healthcheck:
-      test: curl --fail http://0.0.0.0:8080/health || exit 1
-      interval: 120s
-      timeout: 10s
-      retries: 3
-      start_period: 15s
+    # healthcheck:
+    #   test: curl --fail http://0.0.0.0:8080/health || exit 1
+    #   interval: 120s
+    #   timeout: 10s
+    #   retries: 3
+    #   start_period: 15s
 
   pwa:
     # port 8085
@@ -86,7 +86,7 @@ services:
       - ./web_app/:/app
     depends_on:
       api:
-        condition: service_healthy
+        condition: service_started
     env_file:
       - ./web_app/.webapp.env
     environment:

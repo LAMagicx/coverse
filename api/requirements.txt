@@ -6,7 +6,6 @@ pydantic
 pyjwt
 passlib
 bcrypt
-spacy
 fastembed
 python-json-logger
 loguru

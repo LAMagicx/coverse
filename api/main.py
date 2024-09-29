@@ -38,19 +38,19 @@ api.add_middleware(
     allow_headers=["*"],
 )
 
-api.add_middleware(
-    SessionMiddleware, secret_key="secretkey", max_age=None, domain=DOMAIN
-)
+# api.add_middleware(
+#     SessionMiddleware, secret_key="secretkey", max_age=None, domain=DOMAIN
+# )
 
 
-@api.middleware("http")
-async def logging_middleware(request: Request, call_next):
-    response = Response("Internal server error", status_code=500)
-    try:
-        response: Response = await call_next(request)
-    finally:
-        print(request.client, request.session)
-    return response
+# @api.middleware("http")
+# async def logging_middleware(request: Request, call_next):
+#     response = Response("Internal server error", status_code=500)
+#     try:
+#         response: Response = await call_next(request)
+#     finally:
+#         print(request.client, request.session)
+#     return response
 
 
 @api.get("/health")

@@ -4,3 +4,4 @@ jinja2
 gunicorn
 pydantic
 typing
+flask_session
