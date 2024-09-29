@@ -9,18 +9,18 @@ class AuthDetails(BaseModel):
 
 
 class Command(BaseModel):
-    name: str = Field(..., max_length=32)
-    text: str = Field(..., max_length=32)
+    name: str = Field(..., max_length=64)
+    text: str = Field(..., max_length=64)
     page: int = Field(ge=0, le=1024)
-    required: List[int] | None = []
+    required: List[Optional[int]] = []
 
 
 class Page(BaseModel):
     id: int = Field(ge=0, le=1024)
-    title: str = Field(..., max_length=32)
+    title: str = Field(..., max_length=64)
     text: str = Field(..., max_length=258)
     limit: int = Field(ge=1, le=8)
-    commands: List[Optional[Command]] | None = []
+    commands: List[Optional[Command]] = []
 
 
 Pages = TypeAdapter(List[Page])

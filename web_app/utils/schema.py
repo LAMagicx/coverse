@@ -5,15 +5,15 @@ from typing import List, Optional
 class Command(BaseModel):
     name: str
     text: str
-    page: str | int
-    required: Optional[List[int | str]] = []
+    page: int
+    required: Optional[List[int]] = []
 
 
 class CreatePage(BaseModel):
-    id: int | str
+    id: int
     title: str
     text: str
-    limit: int | str
+    limit: int
     commands: Optional[List[Command]] = []
 
 
