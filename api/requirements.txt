@@ -11,3 +11,4 @@ fastembed
 python-json-logger
 loguru
 slowapi
+itsdangerous

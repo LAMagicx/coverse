@@ -1,5 +1,7 @@
 import os
 
+DOMAIN = os.environ.get("DOMAIN", "localhost")
+
 DB_HOST = "coverse-db"
 DB_PORT = "8000"
 DB_USER = "root"

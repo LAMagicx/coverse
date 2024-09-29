@@ -52,9 +52,10 @@ services:
       - .env
     environment:
       - WATCHFILES_FORCE_POLLING=true
+      - DOMAIN=${DOMAIN}
     build: ./api
-    # ports:
-    #   - "8080:8080"
+    ports:
+      - "8080:8080"
     volumes:
       - ./api/:/api
     depends_on:
@@ -79,8 +80,8 @@ services:
     # port 8085
     container_name: coverse-pwa
     build: ./web_app
-    # ports:
-    #   - "8085:8085"
+    ports:
+      - "8085:8085"
     volumes:
       - ./web_app/:/app
     depends_on:

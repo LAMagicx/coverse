@@ -32,7 +32,7 @@
       <div id="commands-container">
           {% for command in page.commands %}
           <div class="command-group">
-              <h3>Command {{ loop.index - 1 }}</h3>
+              <h3>Command {{ loop.index }}</h3>
               <label for="command-name-{{ loop.index - 1 }}">Command Name:</label>
               <input type="text" id="command-name-{{ loop.index - 1 }}" name="commands[{{ loop.index -1 }}][name]" value="{{ command.name }}" required>
 
