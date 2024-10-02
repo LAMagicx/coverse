@@ -55,7 +55,11 @@ def post_page(page: CreatePage):
         )
     elif res.status_code == 409:
         # page exists
-        return render_template("not_found.html", page_id=page.id)
+        return render_template(
+            "not_found.html",
+            page_id=page.id,
+            error="The page already exists. Try to create a different page.",
+        )
     else:
         # other error
         return render_template("404.html"), res.status_code
@@ -101,11 +105,11 @@ def show_page(page_id: int):
     prev_command_text = request.args.get("command", default="", type=str)
     page = get_page(page_id=page_id, uid=uid)
     if page is not None:
+        allowed_commands = [
+            set([p[5:] for p in r]).issubset(session["visits"][uid])
+            for r in page.commands.required
+        ]
         if prev_command_text != "":
-            allowed_commands = [
-                set([p[5:] for p in r]).issubset(session["visits"][uid])
-                for r in page.commands.required
-            ]
             return render_template(
                 "page.html",
                 page=page,
@@ -114,7 +118,9 @@ def show_page(page_id: int):
                 zip=zip,
             )
         else:
-            return render_template("page.html", page=page, zip=zip)
+            return render_template(
+                "page.html", page=page, allowed=allowed_commands, zip=zip
+            )
     else:
         return render_template("not_found.html", page_id=page_id)
 
@@ -126,8 +132,10 @@ def create(page_id: int):
 
         # {'id': ['0'], 'title': ['werew'], 'text': ['qwrqwr'], 'limit': ['2'], 'commands[0][name]': ['qwrqwr'], 'commands[0][text]': ['qwrqwr'], 'commands[0][page]': ['1'], 'commands[0][required]': [''], 'commands[1][name]': ['qwrqwr'], 'commands[1][text]': ['qwrqrw'], 'commands[1][page]': ['2'], 'commands[1][required]': ['']}
         # Parse commands from form data
+        print(form_data)
         commands = []
         for i in range(int(form_data.get("limit", ["0"])[0])):
+            print(i)
             if f"commands[{i}][name]" not in form_data.keys():
                 break
             try:
@@ -156,6 +164,7 @@ def create(page_id: int):
                 limit=int(form_data["limit"][0]),
                 commands=commands,
             )
+            print(page)
             return post_page(page)
         except ValidationError as e:
             print(f"Error in page data: {e}", "error")

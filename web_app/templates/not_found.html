@@ -1,8 +1,13 @@
 {% extends 'base.html' %}
 
 {% block content %}
+{% if error %}
+<h2 class="page-title">Page {{ page_id }} already exists.</h2>
+<p class="page-text">The page you are trying to create already exists. Please try to create a different page.</p>
+{% else %}
 <h2 class="page-title">Page {{ page_id }} not found.</h2>
 <p class="page-text">The page you are looking for could not be found but probably hasn't been created yet. You can either go back to the start and start again, or you can decide to write this page and continue the story.</p>
+{% endif %}
 
 <div class="button-container">
   <button onclick="window.location.href='/page/0'">Restart</button>

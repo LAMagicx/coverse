@@ -1,106 +1,155 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1>Create Page</h1>
 
-  {% if error %}
+<form id="create-page-form" method="post" action="/create/{{ page_id }}">
+  <div id="main-content">
+    {% if error %}
     <p class="error">{{ error }}</p>
-  {% endif %}
-
-  <form id="create-page-form" method="post" action="/create/{{ page_id }}">
-      <div class="input-container">
-          <label for="page-id">Page ID (Number):</label>
-          <input type="number" id="page-id" name="id" value="{{ page_id }}" required readonly>
+    {% endif %}
+    <div id="title-content">
+      <h2>Create Page {{ page_id }}</h2>
+      <div id="page-title-container">
+        <div class="input-container" id="page-title-input">
+          <input type="text" id="page-title" name="title" placeholder="Page Title" {% if page %} value="{{ page.title }}" {% endif %} required>
+          <div class="underline"></div>
+        </div>
       </div>
-
-      <div class="input-container">
-          <label for="page-title">Page Title:</label>
-          <input type="text" id="page-title" name="title" {% if page %} value="{{ page.title }}" {% endif %} required>
-      </div>
-
-      <div class="input-container">
-          <label for="page-text">Page Text:</label>
-          <textarea id="page-text" name="text" required>{% if page %}{{ page.text }}{% endif %}</textarea>
-      </div>
-
-      <div class="input-container">
-          <label for="commands-limit">Commands Limit (Max 6):</label>
-          <input type="number" id="commands-limit" name="limit" min="1" max="6" {% if page %} value="{{ page.limit }}" {% endif %} required>
-      </div>
-
-      {% if page %}
-      <div id="commands-container">
-          {% for command in page.commands %}
-          <div class="command-group">
-              <h3>Command {{ loop.index }}</h3>
-              <label for="command-name-{{ loop.index - 1 }}">Command Name:</label>
-              <input type="text" id="command-name-{{ loop.index - 1 }}" name="commands[{{ loop.index -1 }}][name]" value="{{ command.name }}" required>
-
-              <label for="command-text-{{ loop.index - 1}}">Command Text:</label>
-              <input type="text" id="command-text-{{ loop.index - 1 }}" name="commands[{{ loop.index - 1 }}][text]" value="{{ command.text }}" required>
-
-              <label for="command-page-{{ loop.index - 1 }}">Command Page:</label>
-              <input type="text" id="command-page-{{ loop.index - 1 }}" name="commands[{{ loop.index - 1 }}][page]" value="{{ command.page }}" required>
-
-              <label for="required-page-ids-{{ loop.index - 1 }}">Required Page IDs (Optional):</label>
-              <input type="text" id="required-page-ids-{{ loop.index - 1 }}" name="commands[{{ loop.index - 1 }}][required]" value="{{ command.required|join(', ') }}" placeholder="Comma-separated list">
-          </div>
-          {% endfor %}
-      </div>
-      {% else %}
-      <div id="commands-container">
-          <!-- Initial command input fields -->
-          <div class="command-group">
-              <h3>Command 1</h3>
-              <label for="command-name-0">Command Name:</label>
-              <input type="text" id="command-name-0" name="commands[0][name]" required>
-
-              <label for="command-text-0">Command Text:</label>
-              <input type="text" id="command-text-0" name="commands[0][text]" required>
-
-              <label for="command-page-0">Command Page:</label>
-              <input type="text" id="command-page-0" name="commands[0][page]" required>
-
-              <label for="required-page-ids-0">Required Page IDs (Optional):</label>
-              <input type="text" id="required-page-ids-0" name="commands[0][required]" placeholder="Comma-separated list">
-          </div>
-      </div>
-      {% endif %}
-
       <div class="button-container">
-          <button type="button" id="add-command-btn">Add Another Command</button>
-          <button type="submit">Create Page</button>
+        <button id="create-page-button" type="submit">Create Page</button>
       </div>
-  </form>
+    </div>
+
+    <div id="text-content">
+      <div class="input-container">
+        <input id="page-text" name="text" placeholder="Page Text" {% if page %}value="{{ page.text }}"{% endif %} required>
+        <div class="underline"></div>
+      </div>
+      <div class="input-container">
+        <input type="number" id="commands-limit" placeholder="Maximum commands" name="limit" min="1" max="6" {% if page %} value="{{ page.limit }}" {% endif %} required>
+        <div class="underline"></div>
+      </div>
+    </div>
+
+    <div id="command-content">
+      {% if page %}
+        {% for command in page.commands %}
+          <div class="command" id="command-{{ loop.index }}">
+            <h4>Command {{ loop.index }}</h4>
+            <div class="input-container">
+              <input type="text" id="command-name-{{ loop.index - 1 }}" name="commands[{{ loop.index - 1 }}][name]" value="{{ command.name }}" placeholder="Command Title" required>
+              <div class="underline"></div>
+            </div>
+            <div class="input-container">
+              <input type="text" id="command-text-{{ loop.index - 1 }}" name="commands[{{ loop.index - 1 }}][text]" value="{{ command.text }}" placeholder="Command Text" required>
+              <div class="underline"></div>
+            </div>
+            <div class="input-container">
+              <input type="text" id="command-page-{{ loop.index - 1 }}" name="commands[{{ loop.index - 1 }}][page]" value="{{ command.page }}" placeholder="Command Page" required>
+              <div class="underline"></div>
+            </div>
+            <div class="input-container">
+              <input type="text" id="required-page-ids-{{ loop.index - 1 }}" name="commands[{{ loop.index - 1 }}][required]" value="{{ command.required|join(', ') }}" placeholder="Required Pages">
+              <div class="underline"></div>
+            </div>
+            <button class="remove-button" onclick="removeCommand(this);">Remove</button>
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="command" id="command-1">
+          <h4>Command 1</h4>
+          <div class="input-container">
+            <input type="text" id="command-name-0" name="commands[0][name]" placeholder="Command Title" required>
+            <div class="underline"></div>
+          </div>
+          <div class="input-container">
+            <input type="text" id="command-text-0" name="commands[0][text]" placeholder="Command Text" required>
+            <div class="underline"></div>
+          </div>
+          <div class="input-container">
+            <input type="text" id="command-page-0" name="commands[0][page]" placeholder="Command Page" required>
+            <div class="underline"></div>
+          </div>
+          <div class="input-container">
+            <input type="text" id="required-page-ids-0" name="commands[0][required]" placeholder="Required Pages">
+            <div class="underline"></div>
+          </div>
+          <button class="remove-button" onclick="removeCommand(this);">Remove</button>
+        </div>
+      {% endif %}
+      <div class="command" id="add-command-button">+</div>
+    </div>
+  </div>
+</form>
 
   <script>
-    document.getElementById('add-command-btn').addEventListener('click', function() {
-        const commandsContainer = document.getElementById('commands-container');
-        const currentCommandsCount = commandsContainer.children.length;
-        const commandsLimit = document.getElementById('commands-limit').value;
+    const addCommandButton = document.querySelector("#add-command-button");
+    const commandContainer = document.querySelector("#command-content");
+    const commandLimitInput = document.querySelector("#commands-limit");
 
-        if (currentCommandsCount < commandsLimit) {
-            const commandGroup = document.createElement('div');
-            commandGroup.className = 'command-group';
-            commandGroup.innerHTML = `
-                <h3>Command ${currentCommandsCount + 1}</h3>
-                <label for="command-name-${currentCommandsCount}">Command Name:</label>
-                <input type="text" id="command-name-${currentCommandsCount}" name="commands[${currentCommandsCount}][name]" required>
+    addCommandButton.addEventListener("click", () => {
+      const commandsLimit = document.getElementById('commands-limit').value || 1;
+      if (commandsLimit < commandContainer.children.length) {
+        alert("Maximun number of commands reached !")
+      } else {
+        const commandCount = document.querySelectorAll(".command").length; // Get the current number of commands
+        const newCommand = document.createElement("div")
+        newCommand.classList.add("command");
+        newCommand.id = `command-${commandCount + 1}`; // Set new id for the command
 
-                <label for="command-text-${currentCommandsCount}">Command Text:</label>
-                <input type="text" id="command-text-${currentCommandsCount}" name="commands[${currentCommandsCount}][text]" required>
+        // Update the newCommand's HTML to reflect the correct ids and placeholders for new inputs
+        newCommand.innerHTML = `
+          <h4>Command ${commandCount + 1}</h4>
+          <div class="input-container">
+            <input type="text" id="command-name-${commandCount}" name="commands[${commandCount}][name]" placeholder="Command Title" required>
+            <div class="underline"></div>
+          </div>
+          <div class="input-container">
+            <input type="text" id="command-text-${commandCount}" name="commands[${commandCount}][text]" placeholder="Command Text" required>
+            <div class="underline"></div>
+          </div>
+          <div class="input-container">
+            <input type="text" id="command-page-${commandCount}" name="commands[${commandCount}][page]" placeholder="Command Page" required>
+            <div class="underline"></div>
+          </div>
+          <div class="input-container">
+            <input type="text" id="required-page-ids-${commandCount}" name="commands[${commandCount}][required]" placeholder="Required Pages">
+            <div class="underline"></div>
+          </div>
+          <button class="remove-button" onclick="removeCommand(this);">Remove</button>
+        `;
 
-                <label for="command-page-${currentCommandsCount}">Command Page:</label>
-                <input type="text" id="command-page-${currentCommandsCount}" name="commands[${currentCommandsCount}][page]" required>
+        // Insert the new command before the add button
+        commandContainer.insertBefore(newCommand, addCommandButton);
 
-                <label for="required-page-ids-${currentCommandsCount}">Required Page IDs (Optional):</label>
-                <input type="text" id="required-page-ids-${currentCommandsCount}" name="commands[${currentCommandsCount}][required]" placeholder="Comma-separated list">
-            `;
-            commandsContainer.appendChild(commandGroup);
-        } else {
-            alert("Maximum number of commands reached.");
-        }
+        // Update command numbers
+        updateCommandNumbers();
+      }
     });
+
+    function removeCommand(ele) {
+      ele.parentNode.remove();
+      updateCommandNumbers();
+    }
+
+    function updateCommandNumbers() {
+      commandLimitInput.setAttribute("min", commandContainer.children.length - 1);
+      const commands = document.querySelectorAll(".command");
+      commands.forEach((command, index) => {
+        current_index = command.id.match(/\d+/)[0] - 1;
+        command.id = `command-${index + 1}`;
+        command.querySelector("h4").textContent = `Command ${index + 1}`;
+        command.querySelector(`#command-name-${current_index}`).setAttribute("id", `command-name-${index}`);
+        command.querySelector(`#command-text-${current_index}`).setAttribute("id", `command-text-${index}`);
+        command.querySelector(`#command-page-${current_index}`).setAttribute("id", `command-page-${index}`);
+        command.querySelector(`#required-page-ids-${current_index}`).setAttribute("id", `required-page-ids-${index}`);
+        command.querySelector(`[name="commands[${current_index}][name]"]`).setAttribute("name", `commands[${index}][name]`);
+        command.querySelector(`[name="commands[${current_index}][text]"]`).setAttribute("name", `commands[${index}][text]`);
+        command.querySelector(`[name="commands[${current_index}][page]"]`).setAttribute("name", `commands[${index}][page]`);
+        command.querySelector(`[name="commands[${current_index}][required]"]`).setAttribute("name", `commands[${index}][required]`);
+      });
+    }
+
   </script>
 
 {% endblock %}

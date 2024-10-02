@@ -104,21 +104,13 @@ header h1 {
     padding: 20px;
 }
 
-.input-container {
-    margin: 10px 0;
-}
 
 .button-container {
     margin-top: 20px;
 }
 
-input {
-    padding: 8px;
-    width: 80%;
-    margin: 5px 0;
-}
 
-button {
+.button-container button {
     padding: 10px 20px;
     cursor: pointer;
 }
@@ -131,4 +123,130 @@ button:disabled {
 a {
   color: inherit; /* blue colors for links too */
   text-decoration: inherit; /* no underline */
+}
+
+#main-content {
+  display: grid;
+  grid-template-columns: auto;
+  grid-template-rows: auto auto 1fr 2fr;
+  grid-template-areas:
+    "title"
+    "error"
+    "text"
+    "commands";
+}
+
+#main-content .error {
+  grid-area: error;
+}
+
+#title-content {
+  grid-area: title;
+  display: flex;
+  justify-content: space-between;
+}
+
+#title-content h2 {
+  margin-right: 5%;
+}
+
+#text-content {
+  grid-area: text;
+}
+
+#command-content {
+  grid-area: commands;
+  overflow-x: auto;
+  white-space: nowrap;
+  display: flex;
+  flex-direction: row;
+}
+
+.command {
+  display: flex;
+  flex-direction: column;
+  margin: 0 10px;
+  width: 100%;
+  min-width: 140px;
+}
+
+
+#add-command-button {
+    cursor: pointer;
+    font-size: 2em;
+}
+
+.input-container {
+  position: relative;
+  margin: 5px 0;
+  height: auto;
+}
+
+.input-container input {
+  width: 100%;
+  border: none;
+  border-bottom: 2px solid #ccc;
+  padding: 5px 0;
+  background-color: transparent;
+  outline: none;
+}
+
+.input-container input:focus ~ .label,
+.input-container input:valid ~ .label {
+  top: -20px;
+  font-size: 16px;
+  color: #333;
+}
+
+.input-container .underline {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  background-color: #333;
+  transform: scaleX(0);
+  transition: all 0.3s ease;
+}
+
+.input-container input:focus ~ .underline,
+.input-container input:valid ~ .underline {
+  transform: scaleX(1);
+}
+
+.command h4 {
+  margin: 3px 0;
+}
+
+#page-title-container {
+  margin: 0px 0 0 5%;
+  padding: 10px 0;
+}
+
+#page-title-container input{
+  font-size: 1.3em;
+}
+
+.remove-button {
+    background-color: #FF6969;
+    width: 60%;
+    margin: 0 auto;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 7px 7px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.remove-button:hover {
+    background-color: #FF4444;
+}
+
+#add-command-button {
+  width: fit-content;
+}
+
+#create-page-button {
+  min-width: 200px;
 }
