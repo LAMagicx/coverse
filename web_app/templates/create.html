@@ -2,155 +2,92 @@
 
 {% block content %}
 
-<form id="create-page-form" method="post" action="/create/{{ page_id }}">
-  <div id="main-content">
-    {% if error %}
-    <p class="error">{{ error }}</p>
-    {% endif %}
-    <div id="title-content">
-      <h2>Create Page {{ page_id }}</h2>
-      <div id="page-title-container">
-        <div class="input-container" id="page-title-input">
-          <input type="text" id="page-title" name="title" placeholder="Page Title" {% if page %} value="{{ page.title }}" {% endif %} required>
-          <div class="underline"></div>
+<div id="create-page-form"
+     hx-post="/create/{{ page_id }}"
+     hx-target="#main-content"
+     hx-swap="innerHTML"
+     x-data="{
+         commands: [
+             {% if page %}
+                 {% for command in page.commands %}
+                     { name: '{{ command.name }}', text: '{{ command.text }}', page: '{{ command.page }}', required: '{{ command.required|join(', ') }}' },
+                 {% endfor %}
+             {% else %}
+                 { name: '', text: '', page: '', required: '' }
+             {% endif %}
+         ],
+         limit: {{ page.limit if page else 1 }},
+         maxLimit: 6,
+         addCommand() {
+             if (this.commands.length < this.maxLimit) {
+                 this.commands.push({ name: '', text: '', page: '', required: '' });
+             } else {
+                 alert('Maximum number of commands reached!');
+             }
+         },
+         removeCommand(index) {
+             this.commands.splice(index, 1);
+         }
+     }"
+>
+    <div id="main-content">
+        {% if error %}
+        <p class="error">{{ error }}</p>
+        {% endif %}
+        <div id="title-content">
+            <h2>Create Page {{ page_id }}</h2>
+            <div id="page-title-container">
+                <div class="input-container" id="page-title-input">
+                    <input type="text" id="page-title" name="title" placeholder="Page Title" x-model="title" {% if page %} value="{{ page.title }}" {% endif %} required>
+                    <div class="underline"></div>
+                </div>
+            </div>
+            <div class="button-container">
+                <button id="create-page-button" type="submit">Create Page</button>
+            </div>
         </div>
-      </div>
-      <div class="button-container">
-        <button id="create-page-button" type="submit">Create Page</button>
-      </div>
-    </div>
 
-    <div id="text-content">
-      <div class="input-container">
-        <input id="page-text" name="text" placeholder="Page Text" {% if page %}value="{{ page.text }}"{% endif %} required>
-        <div class="underline"></div>
-      </div>
-      <div class="input-container">
-        <input type="number" id="commands-limit" placeholder="Maximum commands" name="limit" min="1" max="6" {% if page %} value="{{ page.limit }}" {% endif %} required>
-        <div class="underline"></div>
-      </div>
-    </div>
-
-    <div id="command-content">
-      {% if page %}
-        {% for command in page.commands %}
-          <div class="command" id="command-{{ loop.index }}">
-            <h4>Command {{ loop.index }}</h4>
+        <div id="text-content">
             <div class="input-container">
-              <input type="text" id="command-name-{{ loop.index - 1 }}" name="commands[{{ loop.index - 1 }}][name]" value="{{ command.name }}" placeholder="Command Title" required>
-              <div class="underline"></div>
+                <input id="page-text" name="text" placeholder="Page Text" x-model="text" {% if page %}value="{{ page.text }}"{% endif %} required>
+                <div class="underline"></div>
             </div>
             <div class="input-container">
-              <input type="text" id="command-text-{{ loop.index - 1 }}" name="commands[{{ loop.index - 1 }}][text]" value="{{ command.text }}" placeholder="Command Text" required>
-              <div class="underline"></div>
+                <input type="number" id="commands-limit" placeholder="Maximum commands" name="limit" min="1" max="6" x-model.number="limit" {% if page %} value="{{ page.limit }}" {% endif %} required>
+                <div class="underline"></div>
             </div>
-            <div class="input-container">
-              <input type="text" id="command-page-{{ loop.index - 1 }}" name="commands[{{ loop.index - 1 }}][page]" value="{{ command.page }}" placeholder="Command Page" required>
-              <div class="underline"></div>
-            </div>
-            <div class="input-container">
-              <input type="text" id="required-page-ids-{{ loop.index - 1 }}" name="commands[{{ loop.index - 1 }}][required]" value="{{ command.required|join(', ') }}" placeholder="Required Pages">
-              <div class="underline"></div>
-            </div>
-            <button class="remove-button" onclick="removeCommand(this);">Remove</button>
-          </div>
-        {% endfor %}
-      {% else %}
-        <div class="command" id="command-1">
-          <h4>Command 1</h4>
-          <div class="input-container">
-            <input type="text" id="command-name-0" name="commands[0][name]" placeholder="Command Title" required>
-            <div class="underline"></div>
-          </div>
-          <div class="input-container">
-            <input type="text" id="command-text-0" name="commands[0][text]" placeholder="Command Text" required>
-            <div class="underline"></div>
-          </div>
-          <div class="input-container">
-            <input type="text" id="command-page-0" name="commands[0][page]" placeholder="Command Page" required>
-            <div class="underline"></div>
-          </div>
-          <div class="input-container">
-            <input type="text" id="required-page-ids-0" name="commands[0][required]" placeholder="Required Pages">
-            <div class="underline"></div>
-          </div>
-          <button class="remove-button" onclick="removeCommand(this);">Remove</button>
         </div>
-      {% endif %}
-      <div class="command" id="add-command-button">+</div>
+
+        <div id="command-content">
+            <template x-for="(command, index) in commands" :key="index">
+                <div class="command" :id="'command-' + (index + 1)">
+                    <h4 x-text="'Command ' + (index + 1)"></h4>
+                    <div class="input-container">
+                        <input type="text" :id="'command-name-' + index" :name="'commands[' + index + '][name]'" x-model="command.name" placeholder="Command Title" required>
+                        <div class="underline"></div>
+                    </div>
+                    <div class="input-container">
+                        <input type="text" :id="'command-text-' + index" :name="'commands[' + index + '][text]'" x-model="command.text" placeholder="Command Text" required>
+                        <div class="underline"></div>
+                    </div>
+                    <div class="input-container">
+                        <input type="text" :id="'command-page-' + index" :name="'commands[' + index + '][page]'" x-model="command.page" placeholder="Command Page" required>
+                        <div class="underline"></div>
+                    </div>
+                    <div class="input-container">
+                        <input type="text" :id="'required-page-ids-' + index" :name="'commands[' + index + '][required]'" x-model="command.required" placeholder="Required Pages">
+                        <div class="underline"></div>
+                    </div>
+                    <button type="button" class="remove-button" @click="removeCommand(index)">Remove</button>
+                </div>
+            </template>
+            <div class="command" id="add-command-button" @click="addCommand">+</div>
+        </div>
     </div>
-  </div>
-</form>
+</div>
 
-  <script>
-    const addCommandButton = document.querySelector("#add-command-button");
-    const commandContainer = document.querySelector("#command-content");
-    const commandLimitInput = document.querySelector("#commands-limit");
-
-    addCommandButton.addEventListener("click", () => {
-      const commandsLimit = document.getElementById('commands-limit').value || 1;
-      if (commandsLimit < commandContainer.children.length) {
-        alert("Maximun number of commands reached !")
-      } else {
-        const commandCount = document.querySelectorAll(".command").length; // Get the current number of commands
-        const newCommand = document.createElement("div")
-        newCommand.classList.add("command");
-        newCommand.id = `command-${commandCount + 1}`; // Set new id for the command
-
-        // Update the newCommand's HTML to reflect the correct ids and placeholders for new inputs
-        newCommand.innerHTML = `
-          <h4>Command ${commandCount + 1}</h4>
-          <div class="input-container">
-            <input type="text" id="command-name-${commandCount}" name="commands[${commandCount}][name]" placeholder="Command Title" required>
-            <div class="underline"></div>
-          </div>
-          <div class="input-container">
-            <input type="text" id="command-text-${commandCount}" name="commands[${commandCount}][text]" placeholder="Command Text" required>
-            <div class="underline"></div>
-          </div>
-          <div class="input-container">
-            <input type="text" id="command-page-${commandCount}" name="commands[${commandCount}][page]" placeholder="Command Page" required>
-            <div class="underline"></div>
-          </div>
-          <div class="input-container">
-            <input type="text" id="required-page-ids-${commandCount}" name="commands[${commandCount}][required]" placeholder="Required Pages">
-            <div class="underline"></div>
-          </div>
-          <button class="remove-button" onclick="removeCommand(this);">Remove</button>
-        `;
-
-        // Insert the new command before the add button
-        commandContainer.insertBefore(newCommand, addCommandButton);
-
-        // Update command numbers
-        updateCommandNumbers();
-      }
-    });
-
-    function removeCommand(ele) {
-      ele.parentNode.remove();
-      updateCommandNumbers();
-    }
-
-    function updateCommandNumbers() {
-      commandLimitInput.setAttribute("min", commandContainer.children.length - 1);
-      const commands = document.querySelectorAll(".command");
-      commands.forEach((command, index) => {
-        current_index = command.id.match(/\d+/)[0] - 1;
-        command.id = `command-${index + 1}`;
-        command.querySelector("h4").textContent = `Command ${index + 1}`;
-        command.querySelector(`#command-name-${current_index}`).setAttribute("id", `command-name-${index}`);
-        command.querySelector(`#command-text-${current_index}`).setAttribute("id", `command-text-${index}`);
-        command.querySelector(`#command-page-${current_index}`).setAttribute("id", `command-page-${index}`);
-        command.querySelector(`#required-page-ids-${current_index}`).setAttribute("id", `required-page-ids-${index}`);
-        command.querySelector(`[name="commands[${current_index}][name]"]`).setAttribute("name", `commands[${index}][name]`);
-        command.querySelector(`[name="commands[${current_index}][text]"]`).setAttribute("name", `commands[${index}][text]`);
-        command.querySelector(`[name="commands[${current_index}][page]"]`).setAttribute("name", `commands[${index}][page]`);
-        command.querySelector(`[name="commands[${current_index}][required]"]`).setAttribute("name", `commands[${index}][required]`);
-      });
-    }
-
-  </script>
+<script>
+    // No more manual DOM manipulation! Alpine.js handles it.
+</script>
 
 {% endblock %}
-

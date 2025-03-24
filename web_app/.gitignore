@@ -1,3 +1,4 @@
+flask_session/
 .webapp.env
 !static/manifest.json
 # Byte-compiled / optimized / DLL files
