@@ -160,25 +160,63 @@ a {
   white-space: nowrap;
   display: flex;
   flex-direction: row;
+  padding: 15px 0;
+  gap: 15px;
+  flex-wrap: nowrap;
+  align-items: flex-start;
 }
 
 .command {
   display: flex;
   flex-direction: column;
-  margin: 0 10px;
+  margin: 0;
   width: 100%;
-  min-width: 140px;
+  min-width: 180px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 8px;
+  padding: 12px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease-in-out;
 }
 
+.command:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
 
-#add-command-button {
-    cursor: pointer;
-    font-size: 2em;
+.add-command {
+  cursor: pointer;
+  font-size: 2em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(230, 240, 255, 0.8);
+  min-height: 240px;
+  width: 80px !important;
+  min-width: 80px !important;
+  font-weight: bold;
+  border: 2px dashed #bbccee;
+  color: #5577aa;
+}
+
+.add-command:hover {
+  background-color: rgba(220, 235, 255, 0.9);
+  border-color: #8899bb;
+}
+
+.add-command.disabled {
+  cursor: not-allowed;
+  background-color: rgba(240, 240, 240, 0.5);
+  border-color: #cccccc;
+  color: #999999;
+  font-size: 0.9em;
+  padding: 5px;
+  text-align: center;
 }
 
 .input-container {
   position: relative;
-  margin: 5px 0;
+  margin: 8px 0;
   height: auto;
 }
 
@@ -186,9 +224,15 @@ a {
   width: 100%;
   border: none;
   border-bottom: 2px solid #ccc;
-  padding: 5px 0;
+  padding: 8px 0;
   background-color: transparent;
   outline: none;
+  font-size: 1em;
+  transition: all 0.3s ease;
+}
+
+.input-container input:focus {
+  border-color: #6495ED;
 }
 
 .input-container input:focus ~ .label,
@@ -204,7 +248,7 @@ a {
   left: 0;
   height: 2px;
   width: 100%;
-  background-color: #333;
+  background-color: #6495ED;
   transform: scaleX(0);
   transition: all 0.3s ease;
 }
@@ -212,6 +256,13 @@ a {
 .input-container input:focus ~ .underline,
 .input-container input:valid ~ .underline {
   transform: scaleX(1);
+}
+
+.hint {
+  font-size: 0.8em;
+  color: #e74c3c;
+  margin: 4px 0;
+  font-style: italic;
 }
 
 .command h4 {
@@ -230,23 +281,90 @@ a {
 .remove-button {
     background-color: #FF6969;
     width: 60%;
-    margin: 0 auto;
+    margin: 10px auto 0;
     color: white;
     border: none;
     border-radius: 5px;
-    padding: 7px 7px;
+    padding: 8px 12px;
     cursor: pointer;
-    transition: background-color 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+    font-size: 0.9em;
+    font-weight: 500;
+    box-shadow: 0 2px 4px rgba(255, 105, 105, 0.3);
 }
 
 .remove-button:hover {
     background-color: #FF4444;
+    box-shadow: 0 3px 6px rgba(255, 68, 68, 0.4);
+    transform: translateY(-1px);
+}
+
+.remove-button:active {
+    transform: translateY(1px);
+    box-shadow: 0 1px 2px rgba(255, 68, 68, 0.4);
 }
 
 #add-command-button {
   width: fit-content;
 }
 
+#form-feedback {
+  width: 100%;
+  padding: 10px 15px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.success-feedback {
+  background-color: rgba(76, 175, 80, 0.1);
+  border: 1px solid #4CAF50;
+  color: #2E7D32;
+}
+
+.error-feedback {
+  background-color: rgba(244, 67, 54, 0.1);
+  border: 1px solid #F44336;
+  color: #C62828;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 #create-page-button {
   min-width: 200px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#create-page-button:hover {
+  background-color: #45a049;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+#create-page-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+#main-content {
+  display: grid;
+  grid-template-columns: auto;
+  grid-template-rows: auto auto auto 1fr;
+  grid-template-areas:
+    "title"
+    "error"
+    "text"
+    "commands";
+  gap: 20px;
 }

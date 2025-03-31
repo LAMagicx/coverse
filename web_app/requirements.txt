@@ -5,3 +5,4 @@ gunicorn
 pydantic
 typing
 flask_session
+surrealdb

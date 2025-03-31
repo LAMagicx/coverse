@@ -2,26 +2,27 @@ services:
   db:
     container_name: coverse-db
     image: surrealdb/surrealdb:v2.0.2
-    # ports:
-      # - "8000:8000"
+    ports:
+      - 8000:8000
+    env_file:
+      - .env
+    entrypoint: 
+      - /surreal 
+      - start 
+      - --username
+      - $SURREAL_USERNAME
+      - --password
+      - $SURREAL_PASSWORD
     volumes:
       - ./coverse-data/:/mydata
-    command:
-      - start
-      - --log=info
-      - --user=${SURREAL_USERNAME}
-      - --pass=${SURREAL_PASSWORD}
-      - --no-banner
-      - --strict
-      - surrealkv://mydata/database.db
     networks:
       - server-net
     restart: always
-    # healthcheck:
-    #   test: /surreal isready
-    #   interval: 10s
-    #   timeout: 5s
-    #   retries: 2
+    healthcheck:
+      test: /surreal isready
+      interval: 10s
+      timeout: 5s
+      retries: 2
     environment:
       - PYTHONDONTWRITEBYTECODE=1
       - SURREAL_EXPERIMENTAL_GRAPHQL=true
@@ -31,13 +32,19 @@ services:
     image: surrealdb/surrealdb:v2.0.1
     volumes:
       - ./surrealdb.surql:/etc/surrealdb.surql
-    command:
+    entrypoint: 
+      - /surreal 
       - import 
-      - --endpoint=http://coverse-db:8000
-      - --user=${SURREAL_USERNAME}
-      - --pass=${SURREAL_PASSWORD}
-      - --ns=test
-      - --db=test
+      - --username
+      - $SURREAL_USERNAME
+      - --password
+      - $SURREAL_PASSWORD
+      - --endpoint
+      - http://coverse-db:8000
+      - --namespace
+      - test
+      - --database
+      - test
       - /etc/surrealdb.surql
     networks:
       - server-net
@@ -45,36 +52,36 @@ services:
       db:
         condition: service_started
 
-  api:
-    # port 8080
-    container_name: coverse-api
-    env_file:
-      - .env
-    environment:
-      - WATCHFILES_FORCE_POLLING=true
-      - DOMAIN=${DOMAIN}
-    build: ./api
-    ports:
-      - "8080:8080"
-    volumes:
-      - ./api/:/api
-    depends_on:
-      db:
-        condition: service_started
-      migrate:
-        condition: service_completed_successfully
-    networks:
-      - server-net
-    restart: always
-    labels:
-      logging: "promtail"
-      logging_jobname: "coverse-api"
-    # healthcheck:
-    #   test: curl --fail http://0.0.0.0:8080/health || exit 1
-    #   interval: 120s
-    #   timeout: 10s
-    #   retries: 3
-    #   start_period: 15s
+  # api:
+  #   # port 8080
+  #   container_name: coverse-api
+  #   env_file:
+  #     - .env
+  #   environment:
+  #     - WATCHFILES_FORCE_POLLING=true
+  #     - DOMAIN=${DOMAIN}
+  #   build: ./api
+  #   ports:
+  #     - "8080:8080"
+  #   volumes:
+  #     - ./api/:/api
+  #   depends_on:
+  #     db:
+  #       condition: service_started
+  #     migrate:
+  #       condition: service_completed_successfully
+  #   networks:
+  #     - server-net
+  #   restart: always
+  #   labels:
+  #     logging: "promtail"
+  #     logging_jobname: "coverse-api"
+  #   # healthcheck:
+  #   #   test: curl --fail http://0.0.0.0:8080/health || exit 1
+  #   #   interval: 120s
+  #   #   timeout: 10s
+  #   #   retries: 3
+  #   #   start_period: 15s
 
   pwa:
     # port 8085
@@ -84,13 +91,13 @@ services:
       - "8085:8085"
     volumes:
       - ./web_app/:/app
-    depends_on:
-      api:
-        condition: service_started
+    # depends_on:
+    #   api:
+    #     condition: service_started
     env_file:
       - ./web_app/.webapp.env
-    environment:
-      - COVERSE_API_URL=http://coverse-api:8080/api
+    # environment:
+      # - COVERSE_API_URL=http://coverse-api:8080/api
       # - COVERSE_API_URL=https://coverse-api.lamagicx.eu/api
       # - COVERSE_API_URL=http://host.docker.internal:8080/api
     restart: always
