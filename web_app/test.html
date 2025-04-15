@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create New Page</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
+    <style>
+        /* Basic body styling */
+        body {
+            background-color: #f3f4f6; /* Tailwind gray-100 */
+            padding: 2rem;
+        }
+        /* Simple card styling mimic */
+        .card {
+            background-color: white;
+            border-radius: 0.5rem; /* rounded-lg */
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); /* shadow-md */
+            overflow: hidden;
+        }
+        .card-header {
+            padding: 1.5rem; /* p-6 */
+            border-bottom: 1px solid #e5e7eb; /* border-b border-gray-200 */
+        }
+        .card-body {
+            padding: 1.5rem; /* p-6 */
+        }
+        /* Input/Textarea bordered variant mimic */
+        .input-bordered, .textarea-bordered {
+             border: 1px solid #d1d5db; /* border-gray-300 */
+             border-radius: 0.375rem; /* rounded-md */
+             padding: 0.5rem 0.75rem; /* py-2 px-3 */
+             width: 100%;
+        }
+        .input-bordered:focus, .textarea-bordered:focus {
+             outline: 2px solid transparent;
+             outline-offset: 2px;
+             border-color: #2563eb; /* focus:border-blue-500 */
+             box-shadow: 0 0 0 2px #bfdbfe; /* focus:ring-blue-200 focus:ring-opacity-50 */
+        }
+         /* Button styles mimic */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem 1rem; /* py-2 px-4 */
+            border-radius: 0.375rem; /* rounded-md */
+            font-weight: 600; /* font-semibold */
+            transition: background-color 0.2s;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+        .btn-sm {
+             padding: 0.25rem 0.75rem; /* py-1 px-3 */
+             font-size: 0.875rem; /* text-sm */
+        }
+        .btn-primary {
+            background-color: #2563eb; /* bg-blue-600 */
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #1d4ed8; /* hover:bg-blue-700 */
+        }
+        .btn-flat { /* Approximating flat style */
+            background-color: #eff6ff; /* bg-blue-50 */
+            color: #2563eb; /* text-blue-600 */
+        }
+        .btn-flat:hover {
+             background-color: #dbeafe; /* hover:bg-blue-100 */
+        }
+         .btn-light { /* Approximating light style */
+            background-color: transparent;
+        }
+        .btn-light:hover {
+            background-color: #f3f4f6; /* hover:bg-gray-100 */
+        }
+        .btn-danger {
+             color: #dc2626; /* text-red-600 */
+        }
+        .btn-danger:hover {
+             background-color: #fee2e2; /* hover:bg-red-100 */
+        }
+        .btn-icon {
+            padding: 0.5rem; /* p-2 */
+        }
+    </style>
+</head>
+<body>
+
+<div class="max-w-4xl mx-auto">
+    <div class="card bg-white"
+         x-data="{
+             commands: [{ title: '', description: '', nextPage: '' }]
+         }"
+         id="page-form-container">
+
+        <div class="card-header flex flex-col gap-2">
+            <h1 class="text-2xl font-bold">Create New Page</h1>
+        </div>
+
+        <div class="card-body">
+            <form hx-post="/save-page"     hx-target="#form-response"  hx-swap="innerHTML"       hx-indicator="#loading-spinner" class="space-y-6">
+
+                <div>
+                    <label for="pageTitle" class="block text-sm font-medium text-gray-700 mb-1">Page Title</label>
+                    <input type="text"
+                           id="pageTitle"
+                           name="pageTitle"  placeholder="Enter the title of this page"
+                           class="input-bordered"
+                           required>
+                </div>
+
+                <div>
+                    <label for="pageContent" class="block text-sm font-medium text-gray-700 mb-1">Page Content</label>
+                    <textarea id="pageContent"
+                              name="pageContent" placeholder="Write your story content here..."
+                              class="textarea-bordered"
+                              rows="4"
+                              required></textarea>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-xl font-semibold">Commands</h2>
+                        <button type="button" class="btn btn-sm btn-primary btn-flat"
+                                @click="commands.push({ title: '', description: '', nextPage: '' })">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1 h-4 w-4"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            Add Command
+                        </button>
+                    </div>
+
+                    <template x-for="(command, index) in commands" :key="index">
+                        <div class="card border border-gray-200">
+                            <div class="card-body space-y-4 relative">
+                                <button type="button" class="btn btn-sm btn-icon btn-light btn-danger absolute top-2 right-2"
+                                        aria-label="Remove Command"
+                                        @click="commands.splice(index, 1)">
+                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                                </button>
+
+                                <div>
+                                    <label :for="'commandTitle' + index" class="block text-sm font-medium text-gray-700 mb-1">Command Title</label>
+                                    <input type="text"
+                                           :id="'commandTitle' + index"
+                                           :name="'commands[' + index + '][title]'" placeholder="Enter command title"
+                                           class="input-bordered"
+                                           x-model="command.title" required>
+                                </div>
+
+                                <div>
+                                    <label :for="'commandDesc' + index" class="block text-sm font-medium text-gray-700 mb-1">Command Description</label>
+                                    <textarea :id="'commandDesc' + index"
+                                              :name="'commands[' + index + '][description]'" placeholder="Enter command description"
+                                              class="textarea-bordered"
+                                              rows="2"
+                                              x-model="command.description" required></textarea>
+                                </div>
+
+                                <div>
+                                    <label :for="'nextPage' + index" class="block text-sm font-medium text-gray-700 mb-1">Next Page Number</label>
+                                    <input type="number"
+                                           :id="'nextPage' + index"
+                                           :name="'commands[' + index + '][nextPage]'" placeholder="Enter the page number this leads to"
+                                           class="input-bordered"
+                                           x-model="command.nextPage" min="1"
+                                           required>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+
+                <div class="flex justify-end items-center gap-4">
+                     <span id="loading-spinner" class="htmx-indicator text-sm text-gray-500">
+                         Saving...
+                         </span>
+                    <div id="form-response" class="text-sm"></div>
+                    <button type="submit" class="btn btn-primary">
+                        Save Page
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

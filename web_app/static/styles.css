@@ -65,59 +65,7 @@ header h1 {
     margin: 20px auto;
     padding: 20px;
     border: 1px solid #ddd;
-}
-
-.page-title {
-    font-size: 24px;
-    margin-bottom: 10px;
-}
-
-.page-text {
-    font-size: 14px;
-    line-height: 1.5;
-    margin-bottom: 20px;
-}
-
-.button-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    justify-content: center;
-}
-
-.button-container button {
-    padding: 10px 15px;
-    border: 1px solid #ddd;
-    background-color: #f4f4f4;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    max-width: 50%;
-    flex: 1 1 calc(33.333% - 10px); /* Adapts based on number of commands */
-}
-
-.button-container button:hover {
-    background-color: #ddd;
-}
-
-.intro {
-    text-align: center;
-    padding: 20px;
-}
-
-
-.button-container {
-    margin-top: 20px;
-}
-
-
-.button-container button {
-    padding: 10px 20px;
-    cursor: pointer;
-}
-
-button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
 }
 
 a {
@@ -125,246 +73,192 @@ a {
   text-decoration: inherit; /* no underline */
 }
 
-#main-content {
-  display: grid;
-  grid-template-columns: auto;
-  grid-template-rows: auto auto 1fr 2fr;
-  grid-template-areas:
-    "title"
-    "error"
-    "text"
-    "commands";
+.card-body {
 }
 
-#main-content .error {
-  grid-area: error;
+.page-title {
+  margin-bottom: 0.25rem;
 }
 
-#title-content {
-  grid-area: title;
-  display: flex;
-  justify-content: space-between;
+.page-title h1 {
+    font-size: 1.875rem;
+    text-align: center;
+    margin: 0;
 }
 
-#title-content h2 {
-  margin-right: 5%;
-}
-
-#text-content {
-  grid-area: text;
-}
-
-#command-content {
-  grid-area: commands;
-  overflow-x: auto;
-  white-space: nowrap;
-  display: flex;
-  flex-direction: row;
-  padding: 15px 0;
-  gap: 15px;
-  flex-wrap: nowrap;
-  align-items: flex-start;
+.page-text p {
+    font-size: 1.125rem;
+    line-height: 1.75;
+    margin: 0;
 }
 
 .command {
-  display: flex;
-  flex-direction: column;
-  margin: 0;
-  width: 100%;
-  min-width: 180px;
-  background-color: rgba(255, 255, 255, 0.8);
-  border-radius: 8px;
-  padding: 12px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  transition: all 0.2s ease-in-out;
+  border-radius: 15px;
+  background-color: #f0f4f8;
+  margin: 1rem 0;
+  padding: 0.5rem;
+  border: 1px solid #dcdcdc;
 }
 
-.command:hover {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-  transform: translateY(-2px);
+.commands-section h2 {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+    margin: 0;
 }
 
-.add-command {
-  cursor: pointer;
-  font-size: 2em;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: rgba(230, 240, 255, 0.8);
-  min-height: 240px;
-  width: 80px !important;
-  min-width: 80px !important;
-  font-weight: bold;
-  border: 2px dashed #bbccee;
-  color: #5577aa;
-}
-
-.add-command:hover {
-  background-color: rgba(220, 235, 255, 0.9);
-  border-color: #8899bb;
-}
-
-.add-command.disabled {
-  cursor: not-allowed;
-  background-color: rgba(240, 240, 240, 0.5);
-  border-color: #cccccc;
-  color: #999999;
-  font-size: 0.9em;
-  padding: 5px;
-  text-align: center;
-}
-
-.input-container {
-  position: relative;
-  margin: 8px 0;
-  height: auto;
-}
-
-.input-container input {
-  width: 100%;
-  border: none;
-  border-bottom: 2px solid #ccc;
-  padding: 8px 0;
-  background-color: transparent;
-  outline: none;
-  font-size: 1em;
-  transition: all 0.3s ease;
-}
-
-.input-container input:focus {
-  border-color: #6495ED;
-}
-
-.input-container input:focus ~ .label,
-.input-container input:valid ~ .label {
-  top: -20px;
-  font-size: 16px;
-  color: #333;
-}
-
-.input-container .underline {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  height: 2px;
-  width: 100%;
-  background-color: #6495ED;
-  transform: scaleX(0);
-  transition: all 0.3s ease;
-}
-
-.input-container input:focus ~ .underline,
-.input-container input:valid ~ .underline {
-  transform: scaleX(1);
-}
-
-.hint {
-  font-size: 0.8em;
-  color: #e74c3c;
-  margin: 4px 0;
-  font-style: italic;
-}
-
-.command h4 {
-  margin: 3px 0;
-}
-
-#page-title-container {
-  margin: 0px 0 0 5%;
-  padding: 10px 0;
-}
-
-#page-title-container input{
-  font-size: 1.3em;
-}
-
-.remove-button {
-    background-color: #FF6969;
-    width: 60%;
-    margin: 10px auto 0;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 8px 12px;
+.commands-grid {
+    display: grid;
+    gap: 1rem;
+    margin: 0.875rem;
     cursor: pointer;
-    transition: all 0.3s ease-in-out;
-    font-size: 0.9em;
-    font-weight: 500;
-    box-shadow: 0 2px 4px rgba(255, 105, 105, 0.3);
 }
 
-.remove-button:hover {
-    background-color: #FF4444;
-    box-shadow: 0 3px 6px rgba(255, 68, 68, 0.4);
-    transform: translateY(-1px);
+.command-card-body {
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+  padding: 1rem;
 }
 
-.remove-button:active {
-    transform: translateY(1px);
-    box-shadow: 0 1px 2px rgba(255, 68, 68, 0.4);
+.command-card-body h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    color: #1f2937;
 }
 
-#add-command-button {
-  width: fit-content;
+.command-card-body p {
+    color: #6b7280; 
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    margin: 0;
 }
 
-#form-feedback {
+.row-container {
+  display: flex;
+  justify-content: space-between;
+  margin: 0.5rem;
+  gap: 10px;
+}
+
+.text-input {
+  background-color: white;
+  border: 2px solid #dcdcdc;
+  border-radius: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  display: block;
+  box-sizing: border-box;
+  padding: 0.5rem 0.5rem 0.25rem 0.5rem;
+}
+
+.command .text-input {
   width: 100%;
-  padding: 10px 15px;
-  margin-bottom: 20px;
-  border-radius: 5px;
-  animation: fadeIn 0.3s ease-in-out;
 }
 
-.success-feedback {
-  background-color: rgba(76, 175, 80, 0.1);
-  border: 1px solid #4CAF50;
-  color: #2E7D32;
+/* --- Hover State --- */
+.text-input:hover {
+  border-color: #b0b0b0; /* Medium grey border on hover */
 }
 
-.error-feedback {
-  background-color: rgba(244, 67, 54, 0.1);
-  border: 1px solid #F44336;
-  color: #C62828;
+/* --- Focus State (when an element inside is focused) --- */
+.text-input:focus-within {
+  border-color: #696969; /* Darker grey border when focused */
+  /* Optional: Add a subtle shadow or glow on focus */
+  /* box-shadow: 0 0 0 2px rgba(105, 105, 105, 0.2); */
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
+.text-input label {
+  display: block;
+  font-size: 0.8em;
+  color: #555;
+  margin-left: 0.15rem;
 }
 
-#create-page-button {
-  min-width: 200px;
-  background-color: #4CAF50;
-  color: white;
+.text-input input[type="text"],
+.text-input input[type="number"],
+.text-input textarea {
   border: none;
-  border-radius: 5px;
-  padding: 10px 15px;
+  outline: none;
+  width: 100%;
   font-size: 1em;
+  font-family: inherit;
+  background-color: transparent;
+  box-sizing: border-box;
+}
+
+.text-input textarea {
+  resize: vertical;
+  min-height: 40px;
+  line-height: 1.4;
+}
+
+/* Specific styling for number input (optional: hide spinners) */
+/* Firefox */
+.text-input input[type="number"] {
+  -moz-appearance: textfield;
+}
+/* Chrome, Safari, Edge, Opera */
+.text-input input[type="number"]::-webkit-outer-spin-button,
+.text-input input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+
+/* Placeholder styling */
+.text-input input::placeholder,
+.text-input textarea::placeholder {
+  color: #aaa;                 /* Lighter grey for placeholder text */
+  opacity: 1;                   /* Firefox fix */
+}
+
+/* CSS */
+.button-4 {
+  background-color: #fbfbfb;
+  border: 1px solid #d5d9d9;
+  border-radius: 8px;
+  box-shadow: rgba(213, 217, 217, .5) 0 2px 5px 0;
+  box-sizing: border-box;
+  color: #0f1111;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: inline-block;
+  font-size: 0.75rem;
+  text-align: center;
+  text-decoration: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  padding: 0.5rem;
+  min-width: 100px;
+  height: fit-content;
+  margin: auto 0;
+
+
 }
 
-#create-page-button:hover {
-  background-color: #45a049;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+.button-4:hover {
+  background-color: #f7fafa;
 }
 
-#create-page-button:disabled {
-  background-color: #cccccc;
-  cursor: not-allowed;
-  box-shadow: none;
+.button-4:focus {
+  border-color: #008296;
+  box-shadow: rgba(213, 217, 217, .5) 0 2px 5px 0;
+  outline: 0;
 }
 
-#main-content {
-  display: grid;
-  grid-template-columns: auto;
-  grid-template-rows: auto auto auto 1fr;
-  grid-template-areas:
-    "title"
-    "error"
-    "text"
-    "commands";
-  gap: 20px;
+.button-4:disabled,
+.button-4[disabled] {
+  background-color: #f0f0f0;  /* Lighter grey background */
+  color: #a0a0a0;           /* Muted grey text color */
+  border-color: #d5d9d9;     /* Keep original border or make slightly lighter */
+  cursor: not-allowed;      /* Indicate non-interactive state */
+  box-shadow: none;           /* Remove shadow */
+  opacity: 0.7;             /* Slightly faded look */
+  pointer-events: none;     /* Prevent clicks and hover effects */
+}
+
+/* Optional: Explicitly override hover/focus for disabled state if needed,
+   though pointer-events: none usually suffices */
+.button-4:disabled:hover,
+.button-4[disabled]:hover {
+    background-color: #f0f0f0; /* Ensure background doesn't change on hover */
 }

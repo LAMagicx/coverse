@@ -11,10 +11,10 @@ import hashlib
 from db import SurrealDB, SurrealTable
 
 SurrealDB.connect("http://coverse-db:8000",
-                  "root", # os.environ.get("SURREAL_USERNAME", "root"),
-                  "notroot", # os.environ.get("SURREAL_PASSWORD", "root"),
-                  "python",
-                  "database_test")
+                  os.environ.get("SURREAL_USERNAME", "root"),
+                  os.environ.get("SURREAL_PASSWORD", "root"),
+                  "test",
+                  "test")
 
 class Command(BaseModel):
     name: str
