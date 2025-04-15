@@ -6,95 +6,75 @@
       x-data="createPageForm()"
       hx-post="/create/{{ page_id }}"
       hx-trigger="submit"
-      hx-target="#form-feedback"
       hx-swap="innerHTML">
-  <div id="main-content">
-    <div id="form-feedback" x-show="message !== ''" 
-         :class="{'success-feedback': !isError, 'error-feedback': isError}">
-      <p x-text="message"></p>
-    </div>
+  <div id="card-body">
     {% if error %}
     <p class="error">{{ error }}</p>
     {% endif %}
-    <div id="title-content">
-      <h2>Create Page {{ page_id }}</h2>
-      <div id="page-title-container">
-        <div class="input-container" id="page-title-input">
-          <input type="text" id="page-title" name="title" placeholder="Page Title" 
-                 {% if page %} value="{{ page.title }}" {% endif %} 
-                 x-model="formData.title"
-                 hx-trigger="keyup changed delay:500ms"
-                 hx-target="next .validation-message"
-                 hx-vals='{"field": "title"}'
-                 required>
-          <div class="underline"></div>
-          <div class="validation-message"></div>
-        </div>
-      </div>
-      <div class="button-container">
-        <button id="create-page-button" type="submit" :disabled="!isFormValid">Create Page</button>
-      </div>
+    <div class="page-title text-input">
+      <label for="title">Page Title</label>
+      <input type="text" id="page-title" name="title" placeholder="Page {{ page_id }}" x-model="formData.title" required>
     </div>
 
-    <div id="text-content">
-      <div class="input-container">
-        <input id="page-text" name="text" placeholder="Page Text" 
-               {% if page %}value="{{ page.text }}"{% endif %} 
-               x-model="formData.text" required>
-        <div class="underline"></div>
-      </div>
-      <div class="input-container">
-        <input type="number" id="commands-limit" placeholder="Maximum commands" name="limit" 
-               min="1" max="6" {% if page %} value="{{ page.limit }}" {% endif %} 
-               x-model="formData.limit" 
-               @input="validateCommandLimit" required>
-        <div class="underline"></div>
-        <p class="hint" x-show="commands.length > formData.limit" 
-           x-text="`Please reduce commands or increase limit (current: ${commands.length}/${formData.limit})`">
-        </p>
-      </div>
+    <div class="page-text text-input">
+      <label for="text">Page Text</label>
+      <textarea id="page-text" name="text" placeholder="Write the main content for this page..." x-model="formData.text" required></textarea>
     </div>
 
-    <div id="command-content" 
-         hx-target="this" 
-         hx-swap="outerHTML">
+    <div class="row-container">
+      <div class="text-input">
+        <label for="limit">Commands: </label>
+        <input type="number" id="commands-limit" placeholder="Maximum commands" name="limit" min="1" max="6" {% if page %} value="{{ page.limit }}" {% endif %} x-model="formData.limit" @input="validateCommandLimit" required>
+        <p class="hint" x-show="commands.length > formData.limit" x-text="`Please reduce commands or increase limit (current: ${commands.length}/${formData.limit})`"></p>
+      </div>
+
+      <div class="button-4 add-command" id="add-command-button" @click="addCommand" x-show="canAddCommands">+ Add Command</div>
+      <div class="button-4 add-command" :disabled="!canAddCommands" x-show="!canAddCommands">Max Commands Reached</div>
+    </div>
+
+    <div id="command-content" hx-target="this" hx-swap="outerHTML">
       <template x-for="(command, index) in commands" :key="index">
         <div class="command" :id="`command-${index + 1}`">
-          <h4 x-text="`Command ${index + 1}`"></h4>
-          <div class="input-container">
-            <input type="text" :id="`command-name-${index}`" 
-                   :name="`commands[${index}][name]`" 
-                   placeholder="Command Title" 
-                   x-model="command.name" required>
-            <div class="underline"></div>
+          <!-- <h4 x-text="`Command ${index + 1}`"></h4> -->
+          <div class="row-container">
+            <div class="text-input">
+              <label for="`commands[${index}][name]`">Command Title</label>
+              <input type="text" :id="`command-name-${index}`" 
+                    :name="`commands[${index}][name]`" 
+                    placeholder="Enter command title" 
+                    x-model="command.name" required>
+            </div>
+            <button class="button-4 remove-button" type="button" @click="removeCommand(index)">Remove</button>
           </div>
-          <div class="input-container">
-            <input type="text" :id="`command-text-${index}`" 
-                   :name="`commands[${index}][text]`" 
-                   placeholder="Command Text" 
-                   x-model="command.text" required>
-            <div class="underline"></div>
+          <div class="row-container">
+            <div class="text-input">
+              <label for="`commands[${index}][text]`">Command Text</label>
+              <input type="text" :id="`command-text-${index}`" 
+                    :name="`commands[${index}][text]`" 
+                    placeholder="Enter command discription" 
+                    x-model="command.text" required>
+            </div>
           </div>
-          <div class="input-container">
-            <input type="text" :id="`command-page-${index}`" 
-                   :name="`commands[${index}][page]`" 
-                   placeholder="Command Page" 
-                   x-model="command.page" required>
-            <div class="underline"></div>
+          <div class="row-container">
+            <div class="text-input">
+              <label for="`commands[${index}][page]`">Command Page</label>
+              <input type="number" :id="`command-page-${index}`" 
+                    :name="`commands[${index}][page]`" 
+                    placeholder="0" 
+                    x-model="command.page" required>
+            </div>
+            <div class="text-input">
+              <label for="`commands[${index}][page]`">Required pages</label>
+              <input type="text" :id="`required-page-ids-${index}`" 
+                    :name="`commands[${index}][required]`" 
+                    placeholder="Example '1, 2, 10'" 
+                    x-model="command.required">
+            </div>
           </div>
-          <div class="input-container">
-            <input type="text" :id="`required-page-ids-${index}`" 
-                   :name="`commands[${index}][required]`" 
-                   placeholder="Required Pages" 
-                   x-model="command.required">
-            <div class="underline"></div>
-          </div>
-          <button class="remove-button" type="button" @click="removeCommand(index)">Remove</button>
         </div>
       </template>
-      <div class="command add-command" id="add-command-button" @click="addCommand" x-show="canAddCommands">+</div>
-      <div class="command add-command disabled" x-show="!canAddCommands">Max Commands Reached</div>
     </div>
+    <button class="button-4" id="create-page-button" type="submit" :disabled="!isFormValid">Create Page</button>
   </div>
 </form>
 

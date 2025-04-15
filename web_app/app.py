@@ -42,8 +42,6 @@ def page_not_found(e):
 
 @app.before_request
 def check_token():
-    print("here")
-    print(session)
     if "visits" not in session:
         session["visits"] = {}
 
@@ -51,7 +49,6 @@ def check_token():
         ua = request.headers.get("User-Agent")
         ip = request.access_route[-1]
         uid = f"{ip}_{hashlib.sha1(ua.encode('utf-8')).hexdigest()[:8]}"
-        print(f"New user: {uid}")
         session["user_id"] = uid
 
 
@@ -71,7 +68,8 @@ def show_page(page_id: int):
     if page is None:
         return render_template('not_found.html', page_id=page_id)
 
-    return render_template('page.html', page=page)
+
+    return render_template('page.html', page=page, zip=zip)
 
 
 def process_page_form(form_data, page_id):
@@ -109,6 +107,7 @@ def process_page_form(form_data, page_id):
             limit=int(form_data.get('limit', 3)),
             commands=commands
         )
+        print(page)
         page.create()
         return page, None
             
@@ -122,7 +121,7 @@ def create(page_id: int):
         page = Page.select(page_id)
         if page is not None:
             # Page exists, redirect to view it
-            return redirect(url_for('show_page', page_id=page_id))
+            return redirect(url_for('show_page', page_id=page_id, zip=zip))
         return render_template('create.html', page_id=page_id)
     
     # Handle POST request
@@ -150,20 +149,7 @@ def create(page_id: int):
             # If there was an error, show the form again with the error message
             return render_template('create.html', page_id=page_id, error=error)
         
-@app.route("/validate-form", methods=["POST"])
-def validate_form():
-    """Endpoint for validating form data via HTMX without submission"""
-    if request.headers.get('HX-Request') == 'true':
-        form_data = request.form.to_dict(flat=False)
-        
-        # Here you would validate the form data
-        # For demo purposes, let's assume validation passes
-        is_valid = True
-        message = "Form data is valid"
-        
-        # Return validation result
-        return jsonify({'valid': is_valid, 'message': message})
 
 if __name__ == "__main__":
 
-    app.run(host="0.0.0.0", port=8085)
+    app.run(host="0.0.0.0", port=8085, use_reloader=True)
