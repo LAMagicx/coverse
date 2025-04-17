@@ -13,13 +13,15 @@
     <div class="commands-section">
         <h2>What will you do?</h2>
         <div class="commands-grid">
-          {% for command in page.commands %}
-          <div class="command-card button-container" hx-on:click="window.location.href='/page/{{ command.page }}'">
-                <div class="command-card-body">
-                  <h3>{{ command.text }}</h3>
-                  <p>{{ command.text }}</p>
-                </div>
-            </div>
+          {% for command, show in zip(page.commands, shows) %}
+            {% if show %}
+            <div class="command-card button-container" hx-on:click="window.location.href='/page/{{ command.page }}'">
+                  <div class="command-card-body">
+                    <h3>{{ command.text }}</h3>
+                    <p>{{ command.text }}</p>
+                  </div>
+              </div>
+            {% endif %}
           {% endfor %}
         </div>
     </div>

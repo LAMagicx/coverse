@@ -11,8 +11,8 @@ import hashlib
 from db import SurrealDB, SurrealTable
 
 SurrealDB.connect("http://coverse-db:8000",
-                  os.environ.get("SURREAL_USERNAME", "root"),
-                  os.environ.get("SURREAL_PASSWORD", "root"),
+                  os.environ.get("SURREAL_USERNAME"),
+                  os.environ.get("SURREAL_PASSWORD"),
                   "test",
                   "test")
 
@@ -60,19 +60,25 @@ def home():
 def show_page(page_id: int):
     user_id = session['user_id']
     if user_id not in session["visits"]:
-        session["visits"][user_id] = [] 
+        session["visits"][user_id] = set()
 
-    session["visits"][user_id].append(page_id)
+    session["visits"][user_id].add(str(page_id))
+
+    print(session["visits"][user_id])
 
     page = Page.select(page_id)
     if page is None:
         return render_template('not_found.html', page_id=page_id)
 
+    shows = [len(session["visits"][user_id].intersection(command.required)) > 0 if len(command.required) > 0 else True for command in page.commands]
 
-    return render_template('page.html', page=page, zip=zip)
+    print(page.commands)
+    print(shows)
+
+    return render_template('page.html', page=page, zip=zip, shows=shows)
 
 
-def process_page_form(form_data, page_id):
+def process_page_form(form_data, page_id) -> tuple[Page | None, str | None]:
     """Process form data and create/update a Page object
     
     Returns:
@@ -140,7 +146,7 @@ def create(page_id: int):
             if error:
                 return jsonify({'success': False, 'message': error})
             else:
-                return jsonify({'success': True, 'message': 'Page saved successfully!'})
+                return redirect(url_for('show_page', page_id=page.id))
         
         # Regular form submission (full page reload)
         if page:
