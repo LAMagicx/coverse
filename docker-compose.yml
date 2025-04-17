@@ -104,6 +104,9 @@ services:
     # include in server net for caddy.
     networks:
       - server-net
+    labels:
+      logging: "promtail"
+      logging_jobname: "coverse-pwa"
 
   # docs:
   #   container_name: coverse-docs 
