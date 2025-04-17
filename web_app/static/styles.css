@@ -237,6 +237,7 @@ a {
 
 .button-4:hover {
   background-color: #f7fafa;
+  border-color: #a6a6a6;
 }
 
 .button-4:focus {
