@@ -15,6 +15,7 @@
     <link rel="apple-touch-icon" href="{{url_for('static', filename='icons/coverse_c_144.png')}}" type="image/png">
     <link rel="apple-touch-icon" href="{{url_for('static', filename='icons/coverse_c_192.png')}}" type="image/png">
     <link rel="apple-touch-icon" href="{{url_for('static', filename='icons/coverse_c_512.png')}}" type="image/png">
+    <script defer src="https://umami.lamagicx.eu/script.js" data-website-id="74c2c727-365e-4f0c-bc89-2338f09e2c94"></script>
 </head>
 <body>
 
@@ -38,5 +39,16 @@
 </div>
 
 </body>
+<script type="text/javascript">
+  (() => {
+    document.querySelectorAll('a').forEach(a => {
+      if (a.host !== window.location.host && !a.getAttribute('data-umami-event')) {
+        a.onclick = () => umami.track(a.id);
+        a.setAttribute('data-umami-event', a.id);
+        a.setAttribute('data-umami-event-url', a.href);
+      }
+    });
+  })();
+</script>
 </html>
 
