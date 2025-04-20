@@ -1,5 +1,5 @@
 from pydantic_core import core_schema
-from pydantic import BaseModel, GetCoreSchemaHandler, field_validator
+from pydantic import BaseModel, GetCoreSchemaHandler, field_validator, field_serializer
 from typing import Any
 from surrealdb import Surreal, RecordID
 
@@ -39,6 +39,10 @@ class SurrealDB:
 
 class SurrealTable(BaseModel):
     id: ID
+
+    @field_serializer('id')
+    def serialize_dt(self, id: ID, _info) -> int:
+        return id.id
 
     @classmethod
     def table_name(cls) -> str:

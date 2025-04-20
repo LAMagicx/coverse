@@ -17,8 +17,10 @@
             {% if show %}
             <div class="command-card button-container" hx-on:click="window.location.href='/page/{{ command.page }}'">
                   <div class="command-card-body">
-                    <h3>{{ command.text }}</h3>
+                    <h3>{{ command.name }}</h3>
+                    {% if command.text != '' %}
                     <p>{{ command.text }}</p>
+                    {% endif %}
                   </div>
               </div>
             {% endif %}

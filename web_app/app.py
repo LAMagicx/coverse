@@ -26,7 +26,7 @@ class Page(SurrealTable):
     title: str
     text: str
     limit: int
-    commands: List[Optional[Command]] = []
+    commands: List[Command] = []
                   
 
 app = Flask(__name__)
@@ -43,7 +43,7 @@ def page_not_found(e):
 @app.before_request
 def check_token():
     if "visits" not in session:
-        session["visits"] = {}
+        session["visits"] = set()
 
     if "user_id" not in session.keys():
         ua = request.headers.get("User-Agent")
@@ -58,22 +58,12 @@ def home():
 
 @app.route("/page/<int:page_id>", methods=["GET"])
 def show_page(page_id: int):
-    user_id = session['user_id']
-    if user_id not in session["visits"]:
-        session["visits"][user_id] = set()
-
-    session["visits"][user_id].add(str(page_id))
-
-    print(session["visits"][user_id])
-
     page = Page.select(page_id)
     if page is None:
+        session["visits"].add(str(page_id))
         return render_template('not_found.html', page_id=page_id)
 
-    shows = [len(session["visits"][user_id].intersection(command.required)) > 0 if len(command.required) > 0 else True for command in page.commands]
-
-    print(page.commands)
-    print(shows)
+    shows = [len(session["visits"].intersection(command.required)) > 0 if len(command.required) > 0 else True for command in page.commands]
 
     return render_template('page.html', page=page, zip=zip, shows=shows)
 
@@ -113,7 +103,6 @@ def process_page_form(form_data, page_id) -> tuple[Page | None, str | None]:
             limit=int(form_data.get('limit', 3)),
             commands=commands
         )
-        print(page)
         page.create()
         return page, None
             
@@ -127,7 +116,10 @@ def create(page_id: int):
         page = Page.select(page_id)
         if page is not None:
             # Page exists, redirect to view it
-            return redirect(url_for('show_page', page_id=page_id, zip=zip))
+            return redirect(url_for('show_page', page_id=page_id))
+        if page_id < 10 and page_id != 5:
+            return render_template('error.html', error=f"Page {page_id} is reserved. Please choose another page.")
+
         return render_template('create.html', page_id=page_id)
     
     # Handle POST request
@@ -140,6 +132,15 @@ def create(page_id: int):
         
         # Process the form data
         page, error = process_page_form(form_data, page_id)
+
+        if page is None:
+            return render_template('error.html', error=f"Page error: {error} page_id")
+
+        print(page)
+        if page.id.record_id < 10:
+            # pages < 10 are reserved show error and try again
+            return render_template('error.html', error=f"Page {page_id} is reserved. Please choose another page.")
+
         
         # Return JSON response if it's an HTMX request
         if request.headers.get('HX-Request') == 'true':
